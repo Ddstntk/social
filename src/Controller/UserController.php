@@ -4,19 +4,20 @@
  *
  * @copyright (c) 2016 Tomasz Chojna
  *
- * @link http://epi.chojna.info.pl
+ * @link      http://epi.chojna.info.pl
  */
 namespace Controller;
 
-use Model\Bookmarks;
 use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Repository\UserRepository;
 /**
  * Class BookmarksController.
  */
-class ViewController implements ControllerProviderInterface
+class UserController implements ControllerProviderInterface
 {
     /**
      * Routing settings.
@@ -25,28 +26,32 @@ class ViewController implements ControllerProviderInterface
      *
      * @return \Silex\ControllerCollection Result
      */
+
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        $controller->get('/', [$this, 'indexAction']);
+        $controller->get('/home/{id}', [$this, 'viewAction'])->bind('user');
 
         return $controller;
     }
 
     /**
-     * Index action.
+     * View action.
      *
      * @param \Silex\Application $app Silex application
+     * @param string             $id  Element Id
      *
-     * @return string Response
+     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
      */
-    public function indexAction(Application $app, $id)
+    public function viewAction(Application $app, $id)
     {
-        $bookmarksModel = new Bookmarks();
+        $userRepository = new UserRepository($app['db']);
 
         return $app['twig']->render(
-            'bookmarks/view.html.twig',
-            ['bookmark' => $bookmarksModel->findOneById($id)]
+            'user/view.html.twig',
+            ['user' => $userRepository->getUserById($id)]
         );
     }
+
+
 }
