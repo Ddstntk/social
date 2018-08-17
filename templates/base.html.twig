@@ -8,10 +8,12 @@
     <title>{% block title %}Default title{% endblock %}</title>
     {% block stylesheets %}
         <!-- Bootstrap -->
-        <link
-              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        {#<link#}
+              {#href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">#}
         <link
                 href="{{ asset('css/customStyle.css') }}" rel="stylesheet">
+        <link
+                href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
         <link
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" >
     {% endblock %}
@@ -45,11 +47,12 @@
 
 {% include 'default/_flash_messages.html.twig' %}
 {% block body %}{% endblock %}
+
+
 {% block javascripts %}
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script
-            src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">1</script>
     <script
             src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script

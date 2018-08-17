@@ -9,6 +9,7 @@
 
 
 use Controller\UserController;
-
+use Controller\PostsController;
 
 $app->mount('/user', new UserController());
+$app->mount('/posts', new PostsController());

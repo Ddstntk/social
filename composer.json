@@ -24,7 +24,7 @@
         "symfony/validator": "~2.8|^3.0",
         "twbs/bootstrap": "^4.1",
         "symfony/intl": "^3.4",
-        "doctrine/dbal": "^2.7"
+        "doctrine/dbal": "^2.5.13"
     },
     "autoload": {
         "psr-0": { "": "src/"}

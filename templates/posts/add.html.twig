@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'title.tag_edit'|trans({'%id%': tag.id}) }}{% endblock %}
+{% block title %}{{ 'title.post_add'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.tag_edit'|trans({'%id%': tag.id}) }}</h1>
+    <h1>{{ 'post.tag_add'|trans }}</h1>
     {% form_theme form with ['bootstrap_4_horizontal_layout.html.twig', 'form/form_errors.html.twig'] %}
-    {{ form_start(form, { method: 'post', action: url('tags_edit', {'id': tag.id}) }) }}
+    {{ form_start(form, { method: 'post', action: url('posts_add') }) }}
     {{ form_widget(form) }}
     <input type="submit" value="{{ 'action.save'|trans }}" class="btn btn-success" />
     {{ form_end(form) }}
