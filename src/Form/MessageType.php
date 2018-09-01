@@ -1,6 +1,6 @@
 <?php
 /**
- * Tag type.
+ * Message type.
  */
 namespace Form;
 
@@ -14,7 +14,7 @@ use Validator\Constraints as CustomAssert;
 /**
  * Class TagType.
  */
-class PostType extends AbstractType
+class MessageType extends AbstractType
 {
 
     /**
@@ -33,11 +33,11 @@ class PostType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
-                        ['groups' => ['post-default']]
+                        ['groups' => ['message-default']]
                     ),
                     new Assert\Length(
                         [
-                            'groups' => ['post-default'],
+                            'groups' => ['message-default'],
                             'min' => 1,
                             'max' => 1000,
                         ]
@@ -54,7 +54,7 @@ class PostType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'validation_groups' => 'post-default',
+                'validation_groups' => 'message-default',
             ]
         );
     }
@@ -64,6 +64,6 @@ class PostType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'post_type';
+        return 'message_type';
     }
 }

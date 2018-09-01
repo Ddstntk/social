@@ -86,41 +86,42 @@ $app->register(new FormServiceProvider());
 $app->register(new ValidatorServiceProvider());
 
 $app->register(new SessionServiceProvider());
-//$app->register(
-//    new SecurityServiceProvider(),
-//    [
-//        'security.firewalls' => [
-//            'dev' => [
-//                'pattern' => '^/(_(profiler|wdt)|css|images|js)/',
-//                'security' => false,
-//            ],
-//            'main' => [
-//                'pattern' => '^.*$',
-//                'form' => [
-//                    'login_path' => 'auth_login',
-//                    'check_path' => 'auth_login_check',
-//                    'default_target_path' => 'tag_index',
-//                    'username_parameter' => 'login_type[login]',
-//                    'password_parameter' => 'login_type[password]',
-//                ],
-//                'anonymous' => true,
-//                'logout' => [
-//                    'logout_path' => 'auth_logout',
-//                    'target_url' => 'tag_index',
-//                ],
-//                'users' => function () use ($app) {
-//                    return new Provider\UserProvider($app['db']);
-//                },
-//            ],
-//        ],
-//        'security.access_rules' => [
-//            ['^/auth.+$', 'IS_AUTHENTICATED_ANONYMOUSLY'],
-//            ['^/.+$', 'ROLE_ADMIN'],
-//        ],
-//        'security.role_hierarchy' => [
-//            'ROLE_ADMIN' => ['ROLE_USER'],
-//        ],
-//    ]
-//);
-
+$app->register(
+    new SecurityServiceProvider(),
+    [
+        'security.firewalls' => [
+            'dev' => [
+                'pattern' => '^/(_(profiler|wdt)|css|images|js)/',
+                'security' => false,
+            ],
+            'main' => [
+                'pattern' => '^.*$',
+                'form' => [
+                    'login_path' => 'auth_login',
+                    'check_path' => 'auth_login_check',
+                    'default_target_path' => 'posts_index',
+                    'username_parameter' => 'login_type[email]',
+                    'password_parameter' => 'login_type[password]',
+                ],
+                'anonymous' => true,
+                'logout' => [
+                    'logout_path' => 'auth_logout',
+                    'target_url' => 'posts_index',
+                ],
+                'users' => function () use ($app) {
+                    return new Provider\UserProvider($app['db']);
+                },
+            ],
+        ],
+        'security.access_rules' => [
+            ['^/auth.+$', 'IS_AUTHENTICATED_ANONYMOUSLY'],
+            ['^/admin', 'ROLE_ADMIN'],
+            ['^.*$', 'ROLE_USER'],
+        ],
+        'security.role_hierarchy' => [
+            'ROLE_ADMIN' => ['ROLE_USER'],
+        ],
+    ]
+);
+//dump($app['security.encoder.bcrypt']->encodePassword('szewczuk', ''));
 return $app;

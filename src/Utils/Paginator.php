@@ -58,7 +58,7 @@ class Paginator
      */
     public function setCurrentPage($currentPage)
     {
-        $this->currentPage = (int) ((ctype_digit((string) $currentPage) && $currentPage > 0) ? $currentPage : 1);
+        $this->currentPage = (integer) ((ctype_digit((string) $currentPage) && $currentPage > 0) ? $currentPage : 1);
     }
 
     /**
@@ -68,7 +68,7 @@ class Paginator
      */
     public function setMaxPerPage($maxPerPage)
     {
-        $this->maxPerPage = (int) ((ctype_digit((string) $maxPerPage) && $maxPerPage > 0) ? $maxPerPage : 1);
+        $this->maxPerPage = (integer) ((ctype_digit((string) $maxPerPage) && $maxPerPage > 0) ? $maxPerPage : 1);
     }
 
     /**
@@ -124,7 +124,7 @@ class Paginator
     /**
      * Calculates current page number.
      *
-     * @param $pagesNumber Number of pages $pagesNumber
+     * @param $pagesNumber Number of pages
      *
      * @return int Current page number
      */

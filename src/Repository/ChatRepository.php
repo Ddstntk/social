@@ -1,6 +1,6 @@
 <?php
 /**
- * Posts repository.
+ * Chat repository.
  */
 namespace Repository;
 
@@ -11,7 +11,7 @@ use Utils\Paginator;
 /**
  * Class PostsRepository.
  */
-class PostsRepository
+class ChatRepository
 {
     /**
      * Number of items per page.
@@ -41,9 +41,9 @@ class PostsRepository
      *
      * @return array Result
      */
-    public function findAll()
+    public function findAll($userId, $id)
     {
-        $queryBuilder = $this->queryAll();
+        $queryBuilder = $this->queryAll($userId, $id);
 
         return $queryBuilder->execute()->fetchAll();
     }
@@ -55,13 +55,13 @@ class PostsRepository
      *
      * @return array Result
      */
-    public function findAllPaginated($page = 1)
+    public function findAllPaginated($page = 1, $userId, $id)
     {
-        $queryBuilder = $this->queryAll();
+        $queryBuilder = $this->queryAll($userId, $id);
         $queryBuilder->setFirstResult(($page - 1) * static::NUM_ITEMS)
             ->setMaxResults(static::NUM_ITEMS);
 
-        $pagesNumber = $this->countAllPages();
+        $pagesNumber = $this->countAllPages( $userId, $id);
 
 
         $paginator = [
@@ -79,12 +79,12 @@ class PostsRepository
      *
      * @return int Result
      */
-    protected function countAllPages()
+    protected function countAllPages( $userId, $id)
     {
         $pagesNumber = 1;
 
-        $queryBuilder = $this->queryAll();
-        $queryBuilder->select('COUNT(DISTINCT p.PK_idPosts) AS total_results')
+        $queryBuilder = $this->queryAll($userId, $id);
+        $queryBuilder->select('COUNT(DISTINCT m.PK_time) AS total_results')
             ->setMaxResults(1);
 
         $result = $queryBuilder->execute()->fetch();
@@ -105,26 +105,33 @@ class PostsRepository
      *
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function save($post)
+    public function save($message, $userId, $id = 1)
     {
         $this->db->beginTransaction();
+
+
+        $queryBuilder = $this->db->createQueryBuilder();
+        $verifyUser =
+            $queryBuilder->select('p.FK_idUsers')
+                ->from('participants', 'p')
+                ->innerJoin('p', 'messages', 'm', 'p.FK_idConversations = m.FK_idConversations')
+                ->where(
+                    'p.FK_idUsers = :userId',
+                    'm.FK_idConversations = :id'
+                )
+                ->orderBy('m.PK_time', 'DESC')
+                ->setParameters(array(':userId'=> $userId, ':id' => $id));
 
         try {
             $currentDateTime = new \DateTime();
-            $post['modified_at'] = $currentDateTime->format('Y-m-d H:i:s');
-            unset($post['posts']);
+            unset($message['messages']);
 
-            if (isset($post['id']) && ctype_digit((string) $post['id'])) {
-                // update record
-                $postId = $post['id'];
-                unset($post['id']);
-                $this->db->update('posts', $post, ['id' => $postId]);
-            } else {
                 // add new record
-                $post['created_at'] = $currentDateTime->format('Y-m-d H:i:s');
-                $post['FK_idUsers'] = 1;
-                $this->db->insert('posts', $post);
-            }
+                $message['PK_time'] = $currentDateTime->format('Y-m-d H:i:s');
+                $message['FK_idUsers'] = $userId;
+                $message['FK_idConversations'] = 1 ;
+                $this->db->insert('messages', $message);
+
             $this->db->commit();
         } catch (DBALException $e) {
             $this->db->rollBack();
@@ -132,46 +139,24 @@ class PostsRepository
         }
     }
 
-    /**
-     * Remove record.
-     *
-     * @param array $post Post
-     *
-     * @throws \Doctrine\DBAL\DBALException
-     *
-     * @return boolean Result
-     */
-    public function delete($post)
-    {
-        $this->db->beginTransaction();
-
-        try {
-            $this->removeLinkedTags($post['id']);
-            $this->db->delete('posts', ['id' => $post['id']]);
-            $this->db->commit();
-        } catch (DBALException $e) {
-            $this->db->rollBack();
-            throw $e;
-        }
-    }
 
     /**
      * Query all records.
      *
      * @return \Doctrine\DBAL\Query\QueryBuilder Result
      */
-    protected function queryAll()
+    protected function queryAll($userId, $id)
     {
         $queryBuilder = $this->db->createQueryBuilder();
-
-        return $queryBuilder->select(
-            'p.PK_idPosts',
-            'p.FK_idUsers',
-            'p.content',
-            'p.idMedia',
-            'p.created_at',
-            'p.modified_at'
-        )->from('posts', 'p')
-            ->orderBy('p.created_at', 'DESC');
+        return $queryBuilder->select('m.PK_time', 'm.content', 'u.name', 'u.surname')
+                ->from('messages', 'm')
+                ->innerJoin('m', 'participants', 'p', 'p.FK_idConversations = m.FK_idConversations')
+                ->innerJoin('m', 'users', 'u', 'u.PK_idUsers = m.FK_idUsers')
+                ->where(
+                    'p.FK_idUsers = :userId',
+                    'm.FK_idConversations = :id'
+                )
+                ->orderBy('m.PK_time', 'DESC')
+                ->setParameters(array(':userId'=> $userId, ':id' => $id));
     }
 }
