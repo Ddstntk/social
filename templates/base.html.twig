@@ -50,7 +50,15 @@
     {% include 'default/_flash_messages.html.twig' %}
     {% block body %}{% endblock %}
     <div name="chat" class="chat col-3 offset-md-6">
+        {#<button type="button" data-src = "/chat/view/3">TRUDNY DO PRZEOCZENIA PRZYCISK</button>#}
         <iframe height="600px" width="400px" src="/chat/view/2"></iframe>
+        {#<script>#}
+            {#$('button').click(function () {#}
+                {#$('#iframe').attr('src',#}
+                {#$(this).data('data-src'))#}
+            {#})#}
+        {#</script>#}
+
     </div>
 </div>
 {#{% include 'default/_flash_messages.html.twig' %}#}
