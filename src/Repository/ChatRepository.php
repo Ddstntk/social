@@ -61,7 +61,7 @@ class ChatRepository
         $queryBuilder->setFirstResult(($page - 1) * static::NUM_ITEMS)
             ->setMaxResults(static::NUM_ITEMS);
 
-        $pagesNumber = $this->countAllPages( $userId, $id);
+        $pagesNumber = $this->countAllPages($userId, $id);
 
 
         $paginator = [
@@ -149,14 +149,14 @@ class ChatRepository
     {
         $queryBuilder = $this->db->createQueryBuilder();
         return $queryBuilder->select('m.PK_time', 'm.content', 'u.name', 'u.surname')
-                ->from('messages', 'm')
-                ->innerJoin('m', 'participants', 'p', 'p.FK_idConversations = m.FK_idConversations')
-                ->innerJoin('m', 'users', 'u', 'u.PK_idUsers = m.FK_idUsers')
-                ->where(
-                    'p.FK_idUsers = :userId',
-                    'm.FK_idConversations = :id'
-                )
-                ->orderBy('m.PK_time', 'DESC')
-                ->setParameters(array(':userId'=> $userId, ':id' => $id));
+            ->from('messages', 'm')
+            ->innerJoin('m', 'participants', 'p', 'p.FK_idConversations = m.FK_idConversations')
+            ->innerJoin('m', 'users', 'u', 'u.PK_idUsers = m.FK_idUsers')
+            ->where(
+                'p.FK_idUsers = :userId',
+                'm.FK_idConversations = :id'
+            )
+            ->orderBy('m.PK_time', 'DESC')
+            ->setParameters(array(':userId'=> $userId, ':id' => $id));
     }
 }

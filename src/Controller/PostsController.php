@@ -30,7 +30,7 @@ class PostsController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-//        $controller->get('/', [$this, 'indexAction'])->bind('posts_index_paginated');
+        //        $controller->get('/', [$this, 'indexAction'])->bind('posts_index_paginated');
         $controller->get('/page/{page}', [$this, 'indexAction'])
             ->assert('page', '[1-9]\d*')
             ->value('page', 1)
@@ -38,10 +38,10 @@ class PostsController implements ControllerProviderInterface
         $controller->match('/add', [$this, 'addAction'])
             ->method('POST|GET')
             ->bind('posts_add');
-//        $controller->match('/{id}/delete', [$this, 'deleteAction'])
-//            ->method('GET|POST')
-//            ->assert('id', '[1-9]\d*')
-//            ->bind('posts_delete');
+        //        $controller->match('/{id}/delete', [$this, 'deleteAction'])
+        //            ->method('GET|POST')
+        //            ->assert('id', '[1-9]\d*')
+        //            ->bind('posts_delete');
         return $controller;
     }
 
@@ -107,59 +107,59 @@ class PostsController implements ControllerProviderInterface
         );
     }
 
-//
-//    /**
-//     * Delete action.
-//     *
-//     * @param \Silex\Application                        $app     Silex application
-//     * @param int                                       $id      Record id
-//     * @param \Symfony\Component\HttpFoundation\Request $request HTTP Request
-//     *
-//     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
-//     */
-//    public function deleteAction(Application $app, $id, Request $request)
-//    {
-//        $tagsRepository = new TagsRepository($app['db']);
-//        $tag = $tagsRepository->findOneById($id);
-//
-//        if (!$tag) {
-//            $app['session']->getFlashBag()->add(
-//                'messages',
-//                [
-//                    'type' => 'warning',
-//                    'message' => 'message.record_not_found',
-//                ]
-//            );
-//
-//            return $app->redirect($app['url_generator']->generate('tags_index'));
-//        }
-//
-//        $form = $app['form.factory']->createBuilder(FormType::class, $tag)->add('id', HiddenType::class)->getForm();
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $tagsRepository->delete($form->getData());
-//
-//            $app['session']->getFlashBag()->add(
-//                'messages',
-//                [
-//                    'type' => 'success',
-//                    'message' => 'message.element_successfully_deleted',
-//                ]
-//            );
-//
-//            return $app->redirect(
-//                $app['url_generator']->generate('tags_index'),
-//                301
-//            );
-//        }
-//
-//        return $app['twig']->render(
-//            'tags/delete.html.twig',
-//            [
-//                'tag' => $tag,
-//                'form' => $form->createView(),
-//            ]
-//        );
-//    }
+    //
+    //    /**
+    //     * Delete action.
+    //     *
+    //     * @param \Silex\Application                        $app     Silex application
+    //     * @param int                                       $id      Record id
+    //     * @param \Symfony\Component\HttpFoundation\Request $request HTTP Request
+    //     *
+    //     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
+    //     */
+    //    public function deleteAction(Application $app, $id, Request $request)
+    //    {
+    //        $tagsRepository = new TagsRepository($app['db']);
+    //        $tag = $tagsRepository->findOneById($id);
+    //
+    //        if (!$tag) {
+    //            $app['session']->getFlashBag()->add(
+    //                'messages',
+    //                [
+    //                    'type' => 'warning',
+    //                    'message' => 'message.record_not_found',
+    //                ]
+    //            );
+    //
+    //            return $app->redirect($app['url_generator']->generate('tags_index'));
+    //        }
+    //
+    //        $form = $app['form.factory']->createBuilder(FormType::class, $tag)->add('id', HiddenType::class)->getForm();
+    //        $form->handleRequest($request);
+    //
+    //        if ($form->isSubmitted() && $form->isValid()) {
+    //            $tagsRepository->delete($form->getData());
+    //
+    //            $app['session']->getFlashBag()->add(
+    //                'messages',
+    //                [
+    //                    'type' => 'success',
+    //                    'message' => 'message.element_successfully_deleted',
+    //                ]
+    //            );
+    //
+    //            return $app->redirect(
+    //                $app['url_generator']->generate('tags_index'),
+    //                301
+    //            );
+    //        }
+    //
+    //        return $app['twig']->render(
+    //            'tags/delete.html.twig',
+    //            [
+    //                'tag' => $tag,
+    //                'form' => $form->createView(),
+    //            ]
+    //        );
+    //    }
 }

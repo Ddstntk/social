@@ -97,10 +97,9 @@ class UserController implements ControllerProviderInterface
 
     /**
      * @param Application $app
-     * @param Request $request
+     * @param Request     $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Doctrine\DBAL\DBALException
-     *
      */
 
     public function editAction(Application $app, Request $request)
