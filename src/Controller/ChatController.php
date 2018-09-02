@@ -51,7 +51,8 @@ class ChatController implements ControllerProviderInterface
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
         return $app['twig']->render(
             'chat/index.html.twig',
-            ['paginator' => $chatRepository->findAllPaginated($page, $userId, $id)]
+            ['paginator' => $chatRepository->findAllPaginated($page, $userId, $id),
+                'user' => $userId]
         );
     }
 

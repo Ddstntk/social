@@ -148,7 +148,7 @@ class ChatRepository
     protected function queryAll($userId, $id)
     {
         $queryBuilder = $this->db->createQueryBuilder();
-        return $queryBuilder->select('m.PK_time', 'm.content', 'u.name', 'u.surname')
+        return $queryBuilder->select('m.PK_time', 'm.content', 'u.PK_idUsers', 'u.name', 'u.surname')
             ->from('messages', 'm')
             ->innerJoin('m', 'participants', 'p', 'p.FK_idConversations = m.FK_idConversations')
             ->innerJoin('m', 'users', 'u', 'u.PK_idUsers = m.FK_idUsers')

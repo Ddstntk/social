@@ -11,9 +11,9 @@
         {#<link#}
               {#href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">#}
         <link
-                href="{{ asset('css/customStyle.css') }}" rel="stylesheet">
-        <link
                 href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+        <link
+                href="{{ asset('css/customStyle.css') }}" rel="stylesheet">
         <link
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" >
     {% endblock %}
@@ -32,7 +32,7 @@
 <div class="navbar fixed-top">
     <a href="index.html">Strona domowa</a>
     <a href="friends.html">Znajomi</a>
-    <a href="chat.html">Wiadomości</a>
+    <a href="/chat/view/2">Wiadomości</a>
 </div>
 
 <div class="sidenav col-2">
@@ -49,6 +49,9 @@
 <div class="customMyApp offset-md-2">
     {% include 'default/_flash_messages.html.twig' %}
     {% block body %}{% endblock %}
+    <div name="chat" class="chat col-3 offset-md-6">
+        <iframe height="600px" width="400px" src="/chat/view/2"></iframe>
+    </div>
 </div>
 {#{% include 'default/_flash_messages.html.twig' %}#}
 {#{% block body %}{% endblock %}#}
