@@ -9,15 +9,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 //use Validator\Constraints as CustomAssert;
 
 /**
- * Class EditType.
+ * Class TagType.
  */
-class EditType extends AbstractType
+class SignupType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -30,7 +31,6 @@ class EditType extends AbstractType
             [
                 'label' => 'label.name',
                 'required' => true,
-                'data' => 'Default value',
                 'attr' => [
                     'max_length' => 45,
                 ],
@@ -111,6 +111,14 @@ class EditType extends AbstractType
                         ]
                     ),
                 ],
+            ]
+        );
+        $builder->add(
+            'birthDate',
+            BirthdayType::class,
+            [
+                'label' => 'label.birthdate',
+                'required' => true,
             ]
         );
     }

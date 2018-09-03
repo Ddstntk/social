@@ -1,13 +1,21 @@
-{% extends 'base.html.twig' %}
+{#href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">#}
+<link
+        href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+<link
+        href="{{ asset('css/customStyle.css') }}" rel="stylesheet">
+<link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" >
 
-{% block title %}{{ 'title.post_add'|trans }}{% endblock %}
-
-{% block body %}
-
-    <h1>{{ 'message.message_add'|trans }}</h1>
-    {% form_theme form with ['bootstrap_4_horizontal_layout.html.twig', 'form/form_errors.html.twig'] %}
     {{ form_start(form, { method: 'post', action: url('messages_send') }) }}
     {{ form_widget(form) }}
-    <input type="submit" value="{{ 'action.save'|trans }}" class="btn btn-success" />
+    <input id = "chatInput" type="submit" value="{{ 'action.save'|trans }}" class="btn btn-primary btn-lg btn-block" onclick="submitForm()" />
     {{ form_end(form) }}
-{% endblock %}
+<script>
+    function submitForm() {
+        // Get the first form with the name
+        // Hopefully there is only one, but there are more, select the correct index
+        var frm = document.getElementsById('chatInput');
+        frm.submit(); // Submit
+        frm.reset();  // Reset
+        return false; // Prevent page refresh
+    }</script>

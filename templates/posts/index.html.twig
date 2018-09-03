@@ -11,8 +11,7 @@
     } %}
 
     {% if paginator.data is defined and paginator.data|length %}
-            <div class="customMyApp offset-md-2">
-            <div name="feed" class="col-7 offset-md-1">
+
                 {#<div class="form-group">#}
                     {#<label for="comment"><h2>Posty:</h2></label>#}
                     {#<textarea class="form-control" rows="5" style="resize: none;" id="comment" placeholder="Napisz cos"></textarea>#}
@@ -28,12 +27,13 @@
                         </div>
                     </div>
                 {% endfor %}
-            </div>
-            </div>
     {% else %}
         <div>
             List is empty!
         </div>
     {% endif %}
+    {#<div class="category">#}
+        {#{{ form_row(form.message-default) }}#}
+    {#</div>#}
 
 {% endblock %}

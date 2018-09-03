@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-//use Validator\Constraints as CustomAssert;
+use Validator\Constraints as CustomAssert;
 
 /**
  * Class TagType.
@@ -23,10 +23,10 @@ class MessageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-
-            'content', null, array('label' => false, 'attr' => array('width' => '100%')),
+            'content',
             TextType::class,
             [
+                'label' => 'label.content',
                 'required' => true,
                 'attr' => [
                     'max_length' => 1000,

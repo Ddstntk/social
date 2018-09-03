@@ -1,6 +1,6 @@
 <?php
 /**
- * Comments controller.
+ * Posts controller.
  *
  * @copyright (c) 2018 Konrad Szewczuk
  */
@@ -9,15 +9,15 @@ namespace Controller;
 use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Repository\CommentsRepository;
-use Form\CommentType;
+use Repository\PostsRepository;
+use Form\PostType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Class PostsController.
  */
-class CommentsController implements ControllerProviderInterface
+class PostsController implements ControllerProviderInterface
 {
     /**
      * Routing settings.
@@ -34,10 +34,10 @@ class CommentsController implements ControllerProviderInterface
         $controller->get('/page/{page}', [$this, 'indexAction'])
             ->assert('page', '[1-9]\d*')
             ->value('page', 1)
-            ->bind('comments_index_paginated');
+            ->bind('posts_index_paginated');
         $controller->match('/add', [$this, 'addAction'])
             ->method('POST|GET')
-            ->bind('comments_add');
+            ->bind('posts_add');
         //        $controller->match('/{id}/delete', [$this, 'deleteAction'])
         //            ->method('GET|POST')
         //            ->assert('id', '[1-9]\d*')
@@ -55,11 +55,11 @@ class CommentsController implements ControllerProviderInterface
      */
     public function indexAction(Application $app, $page = 1)
     {
-        $commentsRepository = new CommentsRepository($app['db']);
+        $postsRepository = new PostsRepository($app['db']);
 
         return $app['twig']->render(
-            'comments/index.html.twig',
-            ['paginator' => $commentsRepository->findAllPaginated($page)]
+            'posts/index.html.twig',
+            ['paginator' => $postsRepository->findAllPaginated($page)]
         );
     }
 
@@ -77,15 +77,14 @@ class CommentsController implements ControllerProviderInterface
         $post = [];
 
         $form = $app['form.factory']->createBuilder(
-            CommentType::class,
+            PostType::class,
             $post
         )->getForm();
         $form->handleRequest($request);
-        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
-        $id = 12;
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $postsRepository = new CommentsRepository($app['db']);
-            $postsRepository->save($form->getData(), $id, $userId);
+            $postsRepository = new PostsRepository($app['db']);
+            $postsRepository->save($form->getData());
 
             $app['session']->getFlashBag()->add(
                 'messages',
@@ -95,12 +94,12 @@ class CommentsController implements ControllerProviderInterface
                 ]
             );
 
-            return $app->redirect($app['url_generator']->generate('comments_index_paginated'), 301);
+            return $app->redirect($app['url_generator']->generate('posts_index'), 301);
         }
 
 
         return $app['twig']->render(
-            'comments/add.html.twig',
+            'posts/add.html.twig',
             [
                 'post' => $post,
                 'form' => $form->createView(),

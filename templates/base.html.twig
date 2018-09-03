@@ -11,9 +11,9 @@
         {#<link#}
               {#href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">#}
         <link
-                href="{{ asset('css/customStyle.css') }}" rel="stylesheet">
-        <link
                 href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+        <link
+                href="{{ asset('css/customStyle.css') }}" rel="stylesheet">
         <link
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" >
     {% endblock %}
@@ -30,9 +30,9 @@
 <body>
 
 <div class="navbar fixed-top">
-    <a href="index.html">Strona domowa</a>
-    <a href="friends.html">Znajomi</a>
-    <a href="chat.html">Wiadomości</a>
+    <a href="/posts/page/1">Strona domowa</a>
+    <a href="/user/index">Znajomi</a>
+    <a href="/chat/view/2">Konwersacje</a>
 </div>
 
 <div class="sidenav col-2">
@@ -47,8 +47,23 @@
     </a>
 </div>
 <div class="customMyApp offset-md-2">
+    <div class="row">
+    <div name="feed" class="col-7 offset-md-1">
     {% include 'default/_flash_messages.html.twig' %}
     {% block body %}{% endblock %}
+    </div>
+    <div name="chat" class="chat col-2 offset-md-7">
+        {#<button type="button" data-src = "/chat/view/3">TRUDNY DO PRZEOCZENIA PRZYCISK</button>#}
+        <iframe id = "sendChat" class="mt-0" height="200px" width="400px" src="/chat/send"></iframe>
+        <iframe id = "myChat" class="mb-0" height="600px" width="400px" src="/chat/view/2"></iframe>
+        {#<script>#}
+            {#$('button').click(function () {#}
+                {#$('#iframe').attr('src',#}
+                {#$(this).data('data-src'))#}
+            {#})#}
+        {#</script>#}
+    </div>
+    </div>
 </div>
 {#{% include 'default/_flash_messages.html.twig' %}#}
 {#{% block body %}{% endblock %}#}
@@ -62,6 +77,10 @@
             src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script
             src="{{ asset('js/scripts.js') }}"></script>
+    <script
+            src="{{ asset('js/refreshChat.js') }}"></script>
 {% endblock %}
+
+
 </body>
 </html>

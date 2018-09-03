@@ -18,7 +18,7 @@ class ChatRepository
      *
      * const int NUM_ITEMS
      */
-    const NUM_ITEMS = 50;
+    const NUM_ITEMS = 5;
 
     /**
      * Doctrine DBAL connection.
@@ -105,7 +105,7 @@ class ChatRepository
      *
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function save($message, $userId, $id = 2)
+    public function save($message, $userId, $id = 1)
     {
         $this->db->beginTransaction();
 

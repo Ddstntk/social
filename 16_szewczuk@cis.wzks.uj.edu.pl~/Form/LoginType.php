@@ -1,9 +1,9 @@
 <?php
 /**
- * Tag type.
+ * Login form.
  */
-namespace Form;
 
+namespace Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -12,65 +12,16 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//use Validator\Constraints as CustomAssert;
-
 /**
- * Class EditType.
+ * Class LoginType.
  */
-class EditType extends AbstractType
+class LoginType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'name',
-            TextType::class,
-            [
-                'label' => 'label.name',
-                'required' => true,
-                'data' => 'Default value',
-                'attr' => [
-                    'max_length' => 45,
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(
-                        ['groups' => ['user-default']]
-                    ),
-                    new Assert\Length(
-                        [
-                            'groups' => ['user-default'],
-                            'min' => 1,
-                            'max' => 45,
-                        ]
-                    ),
-                ],
-            ]
-        );
-        $builder->add(
-            'surname',
-            TextType::class,
-            [
-                'label' => 'label.surname',
-                'required' => true,
-                'attr' => [
-                    'max_length' => 45,
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(
-                        ['groups' => ['user-default']]
-                    ),
-                    new Assert\Length(
-                        [
-                            'groups' => ['user-default'],
-                            'min' => 1,
-                            'max' => 45,
-                        ]
-                    ),
-                ],
-            ]
-        );
         $builder->add(
             'email',
             EmailType::class,
@@ -115,12 +66,11 @@ class EditType extends AbstractType
         );
     }
 
-
     /**
      * {@inheritdoc}
      */
     public function getBlockPrefix()
     {
-        return 'user_type';
+        return 'login_type';
     }
 }

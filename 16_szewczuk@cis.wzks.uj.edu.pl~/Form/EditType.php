@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 //use Validator\Constraints as CustomAssert;
 
 /**
- * Class EditType.
+ * Class TagType.
  */
 class EditType extends AbstractType
 {

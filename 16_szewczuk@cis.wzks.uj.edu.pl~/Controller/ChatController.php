@@ -86,6 +86,8 @@ class ChatController implements ControllerProviderInterface
                     'message' => 'message.element_successfully_added',
                 ]
             );
+
+            return $app->redirect($app['url_generator']->generate('chat_index_paginated', array('id' => 1)), 301);
         }
 
 
