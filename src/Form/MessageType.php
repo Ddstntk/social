@@ -6,6 +6,7 @@ namespace Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -24,13 +25,19 @@ class MessageType extends AbstractType
     {
         $builder->add(
 
-            'content', null, array('label' => false, 'attr' => array('width' => '100%')),
-            TextType::class,
+            'content', null, array(
+                'label' => false,
+                'attr' => array(
+            //                'style' => 'height: 65%; width: 100%;'
+                'rows'=> 5,
+                ),
+            ),
+            TextareaType::class,
             [
                 'required' => true,
-                'attr' => [
-                    'max_length' => 1000,
-                ],
+                'attr' => array(
+            //                    'style' => 'height: 10%; width: 100%;'
+                ),
                 'constraints' => [
                     new Assert\NotBlank(
                         ['groups' => ['message-default']]

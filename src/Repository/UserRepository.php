@@ -10,6 +10,7 @@ use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Utils\Paginator;
 use Symfony\Component\Validator\Constraints\DateTime;
+//use Repository\FriendsRepository;
 /**
  * Class UserRepository.
  */
@@ -187,18 +188,44 @@ class UserRepository
         }
     }
 
-    public function findAllPaginated($page = 1)
+    public function findAllPaginated($page = 1, $friendsRepository, $userId)
     {
-        $countQueryBuilder = $this->queryAll()
-            ->select('COUNT(DISTINCT u.PK_idUsers) AS total_results')
+        $countQueryBuilder = $this->findStrangers($friendsRepository, $userId)
+            ->select('COUNT(DISTINCT k.PK_idUsers) AS total_results')
             ->setMaxResults(1);
 
-        $paginator = new Paginator($this->queryAll(), $countQueryBuilder);
+
+        $paginator = new Paginator($this->findStrangers($friendsRepository, $userId), $countQueryBuilder);
         $paginator->setCurrentPage($page);
         $paginator->setMaxPerPage(100);
 
         return $paginator->getCurrentPageResults();
     }
+
+
+//where($qb->expr()->notIn('rl.request_id', $nots))
+
+        protected function findStrangers($friendsRepository, $userId)
+        {
+
+            $queryBuilder = $this->db->createQueryBuilder();
+            $friends = $friendsRepository->getFriendsIds($userId)->execute();
+
+            return $queryBuilder->select(
+                'k.PK_idUsers',
+                'k.name',
+                'k.surname',
+                'k.idPicture',
+                'k.role_id',
+                'k.birthDate'
+            )
+                ->from('users', 'k')
+//                ->innerJoin('k', 'friends', 'f', 'k.PK_idUsers = f.FK_idUserA')
+                ->where($queryBuilder -> expr()->notIn('k.PK_idUsers',$friends))
+                ->andWhere('k.PK_idUsers <> :userId')
+                ->setParameters(array(':userId' => $userId, ':friendId' => 1));
+
+        }
 
 
     protected function queryAll()

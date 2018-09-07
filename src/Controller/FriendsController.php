@@ -34,6 +34,7 @@ class FriendsController implements ControllerProviderInterface
         $controller = $app['controllers_factory'];
         $controller->get('/add/{friendId}', [$this, 'addFriend'])->bind('friend_add');
         //        $controller->get('/remove', [$this, 'viewAction'])->bind('friend_remove');
+        $controller->get('/index', [$this, 'indexAction'])->bind('friends_index_paginated');
         return $controller;
     }
 
@@ -45,7 +46,7 @@ class FriendsController implements ControllerProviderInterface
      * @return Response
      */
 
-    public function addFriend(Application $app, $friendId)
+    public function addFriend(Application $app, $friendId, $page = 1)
     {
         $friendsRepository = new FriendsRepository($app['db']);
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
@@ -53,7 +54,18 @@ class FriendsController implements ControllerProviderInterface
         $friendsRepository -> addFriend($userId, $friendId);
 
         return $app['twig']->render(
-            'posts/index.html.twig'
+            'friends/index.html.twig',
+            ['paginator' => $friendsRepository->findAllPaginated($page, $userId)]
+        );
+    }
+
+    public function indexAction(Application $app, $page = 1)
+    {
+        $friendsRepository = new FriendsRepository($app['db']);
+        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+        return $app['twig']->render(
+            'friends/index.html.twig',
+            ['paginator' => $friendsRepository->findAllPaginated($page, $userId)]
         );
     }
     //

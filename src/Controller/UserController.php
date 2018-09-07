@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Repository\UserRepository;
+use Repository\FriendsRepository;
+
 use Form\SignupType;
 use Form\EditType;
 use Symfony\Component\Security\Core\User\User;
@@ -53,10 +55,11 @@ class UserController implements ControllerProviderInterface
     public function indexAction(Application $app, $page = 1)
     {
         $userRepository = new UserRepository($app['db']);
-
+        $friendsRepository = new FriendsRepository($app['db']);
+        $userId = 1;
         return $app['twig']->render(
             'user/index.html.twig',
-            ['paginator' => $userRepository->findAllPaginated($page)]
+            ['paginator' => $userRepository->findAllPaginated($page, $friendsRepository, $userId)]
         );
     }
 

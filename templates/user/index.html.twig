@@ -21,7 +21,7 @@
                     <h5 class="card-title">{{ row.name }} {{ row.surname }}</h5>
                     <p class="card-text">{{ row.birthDate }}</p>
                     <a href="#" class="btn btn-secondary">zobacz</a>
-                    <a href="#" class="btn btn-primary">Dodaj</a>
+                    <a href="/friend/add/{{ row.PK_idUsers }}" class="btn btn-primary">Dodaj</a>
                 </div>
             </div>
         {% endfor %}

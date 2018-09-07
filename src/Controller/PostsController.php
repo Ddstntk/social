@@ -57,9 +57,19 @@ class PostsController implements ControllerProviderInterface
     {
         $postsRepository = new PostsRepository($app['db']);
 
+        $post = [];
+
+        $form = $app['form.factory']->createBuilder(
+            PostType::class,
+            $post
+        )->getForm();
+
         return $app['twig']->render(
             'posts/index.html.twig',
-            ['paginator' => $postsRepository->findAllPaginated($page)]
+
+            ['paginator' => $postsRepository->findAllPaginated($page),
+                'form' => $form->createView(),
+            ]
         );
     }
 
@@ -94,17 +104,8 @@ class PostsController implements ControllerProviderInterface
                 ]
             );
 
-            return $app->redirect($app['url_generator']->generate('posts_index'), 301);
+            return $app->redirect($app['url_generator']->generate('posts_index_paginated'), 301);
         }
-
-
-        return $app['twig']->render(
-            'posts/add.html.twig',
-            [
-                'post' => $post,
-                'form' => $form->createView(),
-            ]
-        );
     }
 
     //

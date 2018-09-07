@@ -96,7 +96,7 @@ class AuthController implements ControllerProviderInterface
 
 
         return $app['twig']->render(
-            'user/add.html.twig',
+            'user/new.html.twig',
             array('form' => $form->createView())
         );
     }

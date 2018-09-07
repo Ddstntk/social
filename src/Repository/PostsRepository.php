@@ -74,6 +74,15 @@ class PostsRepository
         return $paginator;
     }
 
+    public function findOneById($id)
+    {
+        $queryBuilder = $this->queryAll();
+        $queryBuilder->where('p.PK_idPosts = :id')
+            ->setParameter(':id', $id, \PDO::PARAM_INT);
+        $result = $queryBuilder->execute()->fetch();
+
+        return !$result ? [] : $result;
+    }
     /**
      * Count all pages.
      *
@@ -166,12 +175,14 @@ class PostsRepository
 
         return $queryBuilder->select(
             'p.PK_idPosts',
-            'p.FK_idUsers',
+            'u.name',
+            'u.surname',
             'p.content',
             'p.idMedia',
             'p.created_at',
             'p.modified_at'
         )->from('posts', 'p')
+            ->innerJoin('p', 'users', 'u', 'p.FK_idUsers = u.PK_idUsers')
             ->orderBy('p.created_at', 'DESC');
     }
 }

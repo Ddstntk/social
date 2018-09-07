@@ -10,6 +10,7 @@ use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Repository\CommentsRepository;
+use Repository\PostsRepository;
 use Form\CommentType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -31,7 +32,7 @@ class CommentsController implements ControllerProviderInterface
     {
         $controller = $app['controllers_factory'];
         //        $controller->get('/', [$this, 'indexAction'])->bind('posts_index_paginated');
-        $controller->get('/page/{page}', [$this, 'indexAction'])
+        $controller->get('/post/{postId}', [$this, 'indexAction'])
             ->assert('page', '[1-9]\d*')
             ->value('page', 1)
             ->bind('comments_index_paginated');
@@ -45,21 +46,33 @@ class CommentsController implements ControllerProviderInterface
         return $controller;
     }
 
-
     /**
-     * Index action.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return string Response
+     * @param Application $app
+     * @param $postId
+     * @param int $page
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function indexAction(Application $app, $page = 1)
+    public function indexAction(Application $app, $postId, $page = 1)
     {
         $commentsRepository = new CommentsRepository($app['db']);
+        $postsRepository = new PostsRepository($app['db']);
+
+        $post = [];
+
+        $form = $app['form.factory']->createBuilder(
+            CommentType::class,
+            $post
+        )->getForm();
 
         return $app['twig']->render(
             'comments/index.html.twig',
-            ['paginator' => $commentsRepository->findAllPaginated($page)]
+            [
+                'paginator' => $commentsRepository->findAllPaginated($page, $postId),
+                'xd' => $postsRepository->findOneById($postId),
+                'post' => $post,
+                'form' => $form->createView()]
         );
     }
 
@@ -72,17 +85,22 @@ class CommentsController implements ControllerProviderInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP Response
      */
-    public function addAction(Application $app, Request $request)
+    public function addAction(Application $app, $page = 1, Request $request)
     {
         $post = [];
-
         $form = $app['form.factory']->createBuilder(
             CommentType::class,
             $post
         )->getForm();
         $form->handleRequest($request);
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
-        $id = 12;
+        $x = $request->headers->get('referer');
+        var_dump($x);
+
+        if(preg_match("/\/(\d+)$/",$x,$matches))
+        {
+            $id=$matches[1];
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             $postsRepository = new CommentsRepository($app['db']);
             $postsRepository->save($form->getData(), $id, $userId);
@@ -95,17 +113,8 @@ class CommentsController implements ControllerProviderInterface
                 ]
             );
 
-            return $app->redirect($app['url_generator']->generate('comments_index_paginated'), 301);
+            return $app->redirect($app['url_generator']->generate('comments_index_paginated', array("postId"=> $id)), 301);
         }
-
-
-        return $app['twig']->render(
-            'comments/add.html.twig',
-            [
-                'post' => $post,
-                'form' => $form->createView(),
-            ]
-        );
     }
 
     //

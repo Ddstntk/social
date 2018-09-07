@@ -30,15 +30,15 @@
 <body>
 
 <div class="navbar fixed-top">
-    <a href="/posts/page/1">Strona domowa</a>
-    <a href="/user/index">Znajomi</a>
-    <a href="/chat/view/2">Konwersacje</a>
+    <a href="/posts/page/1">Posty</a>
+    <a href="/friend/index">Znajomi</a>
+    <a href="/user/index">Osoby</a>
+    <a href="/chat/all">Konwersacje</a>
 </div>
 
 <div class="sidenav col-2">
     <img class="img-fluid " style="width: 100%"
          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxQhGXAcJBNKSrbAA3LowecuQDGJkxUHpOpu-t1dP0kctRBWYx">
-    {% block name %}{% endblock %}
     <a href="/user/profile">Twój profil</a>
     <a href="#">Zdjęcia</a>
     <a href="/user/edit">Ustawienia konta</a>
@@ -54,8 +54,8 @@
     </div>
     <div name="chat" class="chat col-2 offset-md-7">
         {#<button type="button" data-src = "/chat/view/3">TRUDNY DO PRZEOCZENIA PRZYCISK</button>#}
-        <iframe id = "sendChat" class="mt-0" height="200px" width="400px" src="/chat/send"></iframe>
-        <iframe id = "myChat" class="mb-0" height="600px" width="400px" src="/chat/view/2"></iframe>
+        <iframe id = "sendChat" class="mt-0" height="20%" width="400px" src="/chat/send/2"></iframe>
+        <iframe id = "myChat" class="mb-0" height="700px" width="400px" src="/chat/view/2"></iframe>
         {#<script>#}
             {#$('button').click(function () {#}
                 {#$('#iframe').attr('src',#}
@@ -77,6 +77,8 @@
             src="{{ asset('js/scripts.js') }}"></script>
     <script
             src="{{ asset('js/refreshChat.js') }}"></script>
+    <script
+            src="{{ asset('js/changeIframes.js') }}"></script>
 {% endblock %}
 
 

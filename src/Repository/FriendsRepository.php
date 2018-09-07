@@ -48,7 +48,19 @@ class FriendsRepository
         return $queryBuilder->execute()->fetchAll();
     }
 
+    public function friendsNames()
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
 
+        $x =$queryBuilder->select(
+            'u.PK_idUsers',
+            'u.name',
+            'u.surname'
+        )
+            ->from('users', 'u');
+
+        return $x->execute()->fetchAll();
+    }
     /**
      *  Add record
      *
@@ -196,6 +208,61 @@ class FriendsRepository
     //            throw $e;
     //        }
     //    }
+
+    /**
+     * @param int $page
+     * @return array
+     */
+    public function findAllPaginated($page = 1, $userId)
+    {
+        $countQueryBuilder = $this->findFriends($userId)
+            ->select('COUNT(DISTINCT u.PK_idUsers) AS total_results')
+            ->setMaxResults(1);
+
+        $paginator = new Paginator($this->findFriends($userId), $countQueryBuilder);
+        $paginator->setCurrentPage($page);
+        $paginator->setMaxPerPage(100);
+
+        return $paginator->getCurrentPageResults();
+    }
+
+    public function getFriendsIds($userId)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        return $queryBuilder->select(
+            'y.PK_idUsers'
+        )
+            ->from('users', 'y')
+            ->innerJoin('y', 'friends', 'f', 'y.PK_idUsers = f.FK_idUserA')
+            ->innerJoin('f', 'users', 'u', 'u.PK_idUsers = f.FK_idUserB')
+            ->where('u.PK_idUsers = '.$userId);
+
+    }
+    /**
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    protected function findFriends($userId)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        return $queryBuilder->select(
+            'y.PK_idUsers',
+            'y.name',
+            'y.surname',
+            'y.idPicture',
+            'y.role_id',
+            'y.birthDate'
+        )
+            ->from('users', 'y')
+            ->innerJoin('y', 'friends', 'f', 'y.PK_idUsers = f.FK_idUserA')
+            ->innerJoin('f', 'users', 'u', 'u.PK_idUsers = f.FK_idUserB')
+            ->where('u.PK_idUsers = 1')
+            ->setParameters(array(':userId'=> $userId));
+
+
+    }
+
 
     /**
      * Query all records.

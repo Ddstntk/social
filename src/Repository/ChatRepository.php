@@ -48,6 +48,59 @@ class ChatRepository
         return $queryBuilder->execute()->fetchAll();
     }
 
+
+    public function findAllChats($userId)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder->select('p.FK_idConversations')
+            ->from('participants', 'p')
+            ->innerJoin('p', 'users', 'u', 'p.FK_idUsers = u.PK_idUsers')
+        //            ->innerJoin('m', 'users', 'u', 'u.PK_idUsers = m.FK_idUsers')
+            ->where(
+                'p.FK_idUsers = :userId'
+            )
+        //            ->orderBy('m.PK_time', 'DESC')
+            ->setParameters(array(':userId'=> $userId));
+
+        $convList = $queryBuilder->execute()->fetchAll();
+
+        foreach ($convList as $key=>$value)
+        {
+            unset($queryBuilder);
+            $queryBuilder = $this->db->createQueryBuilder();
+
+            $convId = $value['FK_idConversations'];
+            //            var_dump($convId);
+            $queryBuilder->select('u.name', 'u.surname', 'p.FK_idConversations')
+                ->from('users', 'u')
+                ->innerJoin('u', 'participants', 'p', 'u.PK_idUsers = p.FK_idUsers')
+            //            ->innerJoin('m', 'users', 'u', 'u.PK_idUsers = m.FK_idUsers')
+                ->where(
+                    'p.FK_idConversations = :id'
+                )
+            //            ->orderBy('m.PK_time', 'DESC')
+                ->setParameters(array(':id'=> $convId));
+
+            $usersList[$key] = $queryBuilder->execute()->fetchAll();
+        }
+        //        $queryBuilder->select('p.FK_idUsers')
+        //            ->from('participants', 'p')
+        ////            ->innerJoin('p', 'users', 'u', 'p.FK_idUsers = u.PK_idUsers')
+        ////            ->innerJoin('m', 'users', 'u', 'u.PK_idUsers = m.FK_idUsers')
+        //            ->where(
+        //                'p.FK_idConversations = $cl'
+        //            )
+        ////            ->orderBy('m.PK_time', 'DESC')
+        //            ->setParameters(array(':userId'=> $userId));
+
+        //        var_dump($convList);
+
+        return $usersList;
+
+    }
+
+
     /**
      * Get records paginated.
      *
@@ -105,7 +158,7 @@ class ChatRepository
      *
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function save($message, $userId, $id = 2)
+    public function save($message, $userId, $id)
     {
         $this->db->beginTransaction();
 
@@ -129,7 +182,7 @@ class ChatRepository
                 // add new record
                 $message['PK_time'] = $currentDateTime->format('Y-m-d H:i:s');
                 $message['FK_idUsers'] = $userId;
-                $message['FK_idConversations'] = 1 ;
+                $message['FK_idConversations'] = $id ;
                 $this->db->insert('messages', $message);
 
             $this->db->commit();
@@ -139,7 +192,62 @@ class ChatRepository
         }
     }
 
+    /**
+     * @param $participants
+     * @param int          $id
+     * @param $userId
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
+    public function addChat($participants, $id = 2)
+    {
+        //        $conn = $this->getDoctrine()->getConnection();
+        $this->db->beginTransaction();
+        $userId = 10;
+        $conversation = [];
+        try {
+            unset($conversation['conversations']);
 
+            // add new record
+            $conversation['FK_idUsers'] = 11;
+            $this->db->insert('conversations', $conversation);
+            $lastInsert = $this->db->lastInsertId();
+            $this->db->commit();
+
+        } catch (DBALException $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+
+        $data['FK_idConversations'] = $lastInsert;
+
+        //        var_dump($participants['selectUsers']);
+
+        foreach ($participants['selectUsers'] as $p)
+        {
+            //            $this->db->beginTransaction();
+
+            $data['FK_idUsers'] = $p;
+            $this->db->insert('participants', $data);
+            //            $this->db->commit();
+
+        }
+        //        $this->db->beginTransaction();
+        //        try {
+        //            unset($conversation['conversations']);
+        //
+        //            // add new record
+        //            $conversation['FK_idUsers'] = 11;
+        //            $this->db->insert('conversations', $conversation);
+        //            $lastInsert = $this->db->lastInsertId();
+        //            $this->db->commit();
+        //
+        //        } catch (DBALException $e) {
+        //            $this->db->rollBack();
+        //            throw $e;
+        //        }
+
+    }
     /**
      * Query all records.
      *

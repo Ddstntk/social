@@ -18,7 +18,7 @@ class CommentsRepository
      *
      * const int NUM_ITEMS
      */
-    const NUM_ITEMS = 5;
+    const NUM_ITEMS = 100;
 
     /**
      * Doctrine DBAL connection.
@@ -55,9 +55,13 @@ class CommentsRepository
      *
      * @return array Result
      */
-    public function findAllPaginated($page = 1)
+    public function findAllPaginated($page = 1, $postId)
     {
-        $queryBuilder = $this->queryAll();
+        $queryBuilder = $this->queryAll()
+            ->innerJoin('c', 'users','u', 'c.FK_idUsers = u.PK_idUsers')
+        ->where("c.FK_idPosts = :postId")
+        ->setParameter(':postId', $postId);
+
         $queryBuilder->setFirstResult(($page - 1) * static::NUM_ITEMS)
             ->setMaxResults(static::NUM_ITEMS);
 
@@ -161,6 +165,8 @@ class CommentsRepository
         $queryBuilder = $this->db->createQueryBuilder();
 
         return $queryBuilder->select(
+            'u.name',
+            'u.surname',
             'c.PK_idComments',
             'c.FK_idPosts',
             'c.FK_idUsers',
