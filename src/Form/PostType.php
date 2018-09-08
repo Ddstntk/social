@@ -1,18 +1,18 @@
 <?php
 /**
- * Tag type.
+ * Post type.
  */
 namespace Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-use Validator\Constraints as CustomAssert;
 
 /**
- * Class TagType.
+ * Class PostType.
  */
 class PostType extends AbstractType
 {
@@ -44,7 +44,20 @@ class PostType extends AbstractType
                     ),
                 ],
             ]
-        );
+        )
+            ->add(
+                'visibility',
+                ChoiceType::class, array(
+                'label' => 'label.visibility',
+                'choices'  => array(
+                'Znajomi' => 0,
+                'Wszyscy'=> 1,
+                )
+                //            'attr' => array(
+                //                'style' => 'height: 300px;'
+                //            ),
+                )
+            );
     }
 
     /**

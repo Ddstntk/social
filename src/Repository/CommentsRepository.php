@@ -58,9 +58,9 @@ class CommentsRepository
     public function findAllPaginated($page = 1, $postId)
     {
         $queryBuilder = $this->queryAll()
-            ->innerJoin('c', 'users','u', 'c.FK_idUsers = u.PK_idUsers')
-        ->where("c.FK_idPosts = :postId")
-        ->setParameter(':postId', $postId);
+            ->innerJoin('c', 'users', 'u', 'c.FK_idUsers = u.PK_idUsers')
+            ->where("c.FK_idPosts = :postId")
+            ->setParameter(':postId', $postId);
 
         $queryBuilder->setFirstResult(($page - 1) * static::NUM_ITEMS)
             ->setMaxResults(static::NUM_ITEMS);

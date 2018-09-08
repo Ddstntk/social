@@ -9,8 +9,8 @@ use Doctrine\DBAL\Connection;
 use Repository\UserRepository;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+//use CustomUser;
 
 /**
  * Class UserProvider.
@@ -39,13 +39,13 @@ class UserProvider implements UserProviderInterface
      *
      * @param string $login User login
      *
-     * @return User Result
+     * @return CustomUser Result
      */
     public function loadUserByUsername($email)
     {
         $userRepository = new UserRepository($this->db);
         $user = $userRepository->loadUserByEmail($email);
-        return new User(
+        return new CustomUser(
             $user['id'],
             $user['email'],
             $user['password'],
@@ -61,11 +61,11 @@ class UserProvider implements UserProviderInterface
      *
      * @param UserInterface $user User
      *
-     * @return User Result
+     * @return CustomUser Result
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof CustomUser) {
             throw new UnsupportedUserException(
                 sprintf(
                     'Instances of "%s" are not supported.',
@@ -86,6 +86,6 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'Symfony\Component\Security\Core\User\User';
+        return $class === '\app\src\Provider\User';
     }
 }

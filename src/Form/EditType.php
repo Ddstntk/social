@@ -1,6 +1,6 @@
 <?php
 /**
- * Tag type.
+ * Edit type.
  */
 namespace Form;
 

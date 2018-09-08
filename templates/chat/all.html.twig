@@ -9,12 +9,17 @@
     <h1>
        Chats
     </h1>
+    <a class="btn btn-primary mb-2" href="{{ url('conversation_new') }}" title="{{ 'chat.add.label'|trans }}">
+        {{ 'chat.add.label'|trans }}
+    </a>
     {% if chats is defined and chats|length %}
         <ul>
         {% for row in chats %}
             <li><button class="btn btn-outline-dark mb-2" onclick="changeIframes({{ row[0].FK_idConversations }})">
             {% for items in row %}
+                {% if items.PK_idUsers != user %}
                 {{ items.name }} {{ items.surname }},
+                {% endif %}
             {% endfor %}
                 </button>
             </li>

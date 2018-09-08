@@ -13,6 +13,9 @@ use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Service\userTokenService;
+use Repository\UserRepository;
 
 
 $app = new Application();
@@ -30,14 +33,19 @@ $app->register(
 );
 
 $app->register(new HttpFragmentServiceProvider());
-$app['twig'] = $app->extend(
-    'twig',
-    function ($twig, $app) {
-        // add custom globals, filters, tags, ...
 
-        return $twig;
-    }
-);
+$app['config.photos_directory'] = __DIR__.'/../web/uploads/photos';
+$app['config.download_photos_directory'] = '/uploads/photos';
+
+
+$app['twig'] = $app->extend('twig', function ($twig, $app) {
+    // add custom globals, filters, tags, ...
+    $twig->addGlobal('photos_directory', $app['config.photos_directory']);
+    $twig->addGlobal('download_photos_directory', $app['config.download_photos_directory']);
+
+    return $twig;
+});
+
 
 /**
  * TŁUMACZENIA
@@ -123,5 +131,5 @@ $app->register(
         ],
     ]
 );
-//dump($app['security.encoder.bcrypt']->encodePassword('szewczuk', ''));
+
 return $app;

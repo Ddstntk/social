@@ -12,13 +12,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Validator\Constraints as CustomAssert;
 
 /**
- * Class TagType.
+ * Class CommentType.
  */
 class CommentType extends AbstractType
 {
 
     /**
-     * {@inheritdoc}
+     * @param FormBuilderInterface $builder
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -48,7 +49,7 @@ class CommentType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {

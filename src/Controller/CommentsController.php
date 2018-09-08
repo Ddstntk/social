@@ -21,17 +21,12 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 class CommentsController implements ControllerProviderInterface
 {
     /**
-     * Routing settings.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return \Silex\ControllerCollection Result
+     * @param Application $app
+     * @return mixed|\Silex\ControllerCollection
      */
-
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        //        $controller->get('/', [$this, 'indexAction'])->bind('posts_index_paginated');
         $controller->get('/post/{postId}', [$this, 'indexAction'])
             ->assert('page', '[1-9]\d*')
             ->value('page', 1)
@@ -39,18 +34,14 @@ class CommentsController implements ControllerProviderInterface
         $controller->match('/add', [$this, 'addAction'])
             ->method('POST|GET')
             ->bind('comments_add');
-        //        $controller->match('/{id}/delete', [$this, 'deleteAction'])
-        //            ->method('GET|POST')
-        //            ->assert('id', '[1-9]\d*')
-        //            ->bind('posts_delete');
         return $controller;
     }
 
     /**
      * @param Application $app
      * @param $postId
-     * @param int $page
-     * @param Request $request
+     * @param int         $page
+     * @param Request     $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -78,12 +69,11 @@ class CommentsController implements ControllerProviderInterface
 
 
     /**
-     * Add action.
-     *
-     * @param \Silex\Application                        $app     Silex application
-     * @param \Symfony\Component\HttpFoundation\Request $request HTTP Request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
+     * @param Application $app
+     * @param int         $page
+     * @param Request     $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function addAction(Application $app, $page = 1, Request $request)
     {
@@ -97,8 +87,7 @@ class CommentsController implements ControllerProviderInterface
         $x = $request->headers->get('referer');
         var_dump($x);
 
-        if(preg_match("/\/(\d+)$/",$x,$matches))
-        {
+        if(preg_match("/\/(\d+)$/", $x, $matches)) {
             $id=$matches[1];
         }
         if ($form->isSubmitted() && $form->isValid()) {
@@ -117,59 +106,4 @@ class CommentsController implements ControllerProviderInterface
         }
     }
 
-    //
-    //    /**
-    //     * Delete action.
-    //     *
-    //     * @param \Silex\Application                        $app     Silex application
-    //     * @param int                                       $id      Record id
-    //     * @param \Symfony\Component\HttpFoundation\Request $request HTTP Request
-    //     *
-    //     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
-    //     */
-    //    public function deleteAction(Application $app, $id, Request $request)
-    //    {
-    //        $tagsRepository = new TagsRepository($app['db']);
-    //        $tag = $tagsRepository->findOneById($id);
-    //
-    //        if (!$tag) {
-    //            $app['session']->getFlashBag()->add(
-    //                'messages',
-    //                [
-    //                    'type' => 'warning',
-    //                    'message' => 'message.record_not_found',
-    //                ]
-    //            );
-    //
-    //            return $app->redirect($app['url_generator']->generate('tags_index'));
-    //        }
-    //
-    //        $form = $app['form.factory']->createBuilder(FormType::class, $tag)->add('id', HiddenType::class)->getForm();
-    //        $form->handleRequest($request);
-    //
-    //        if ($form->isSubmitted() && $form->isValid()) {
-    //            $tagsRepository->delete($form->getData());
-    //
-    //            $app['session']->getFlashBag()->add(
-    //                'messages',
-    //                [
-    //                    'type' => 'success',
-    //                    'message' => 'message.element_successfully_deleted',
-    //                ]
-    //            );
-    //
-    //            return $app->redirect(
-    //                $app['url_generator']->generate('tags_index'),
-    //                301
-    //            );
-    //        }
-    //
-    //        return $app['twig']->render(
-    //            'tags/delete.html.twig',
-    //            [
-    //                'tag' => $tag,
-    //                'form' => $form->createView(),
-    //            ]
-    //        );
-    //    }
 }

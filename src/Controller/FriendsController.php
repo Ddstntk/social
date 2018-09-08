@@ -4,7 +4,7 @@
  *
  * @copyright (c) 2018 Konrad Szewczuk
  *
- * @link http://cis.wzks.uj.edu.pl/~16_szewczuk/web/index_dev.php/
+ * @link http://cis.wzks.uj.edu.pl/~16_szewczuk/web/
  */
 namespace Controller;
 
@@ -17,33 +17,48 @@ use Repository\FriendsRepository;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 /**
- * Class BookmarksController.
+ * Class FriendsController.
  */
 class FriendsController implements ControllerProviderInterface
 {
     /**
-     * Routing settings.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return \Silex\ControllerCollection Result
+     * @param Application $app
+     * @return mixed|\Silex\ControllerCollection
      */
 
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
+        $controller->get('/invite/{friendId}', [$this, 'inviteAction'])->bind('friend_invite');
         $controller->get('/add/{friendId}', [$this, 'addFriend'])->bind('friend_add');
-        //        $controller->get('/remove', [$this, 'viewAction'])->bind('friend_remove');
         $controller->get('/index', [$this, 'indexAction'])->bind('friends_index_paginated');
+        $controller->get('/invites', [$this, 'indexInvites'])->bind('invites_index_paginated');
+        $controller->match('/{id}/delete', [$this, 'deleteAction'])
+            ->method('GET|POST')
+            ->assert('id', '[1-9]\d*')
+            ->bind('friends_delete');
         return $controller;
     }
 
+    public function inviteAction(Application $app, $friendId, $page = 1)
+    {
+        $friendsRepository = new FriendsRepository($app['db']);
+        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+
+        $friendsRepository -> invite($userId, $friendId);
+
+        return $app['twig']->render(
+            'friends/index.html.twig',
+            ['paginator' => $friendsRepository->findAllPaginated($page, $userId)]
+        );
+    }
+
     /**
-     * Add friend
-     *
-     * @param  Application $app
-     * @param  Request     $request
-     * @return Response
+     * @param Application $app
+     * @param $friendId
+     * @param int         $page
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
      */
 
     public function addFriend(Application $app, $friendId, $page = 1)
@@ -59,8 +74,14 @@ class FriendsController implements ControllerProviderInterface
         );
     }
 
+    /**
+     * @param Application $app
+     * @param int         $page
+     * @return mixed
+     */
     public function indexAction(Application $app, $page = 1)
     {
+
         $friendsRepository = new FriendsRepository($app['db']);
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
         return $app['twig']->render(
@@ -68,61 +89,45 @@ class FriendsController implements ControllerProviderInterface
             ['paginator' => $friendsRepository->findAllPaginated($page, $userId)]
         );
     }
-    //
-    //    /**
-    //     * Index action.
-    //     *
-    //     * @param \Silex\Application $app Silex application
-    //     *
-    //     * @return string Response
-    //     */
-    //    public function indexAction(Application $app, $page = 1)
-    //    {
-    //        $userRepository = new UserRepository($app['db']);
-    //
-    //        return $app['twig']->render(
-    //            'user/index.html.twig',
-    //            ['paginator' => $userRepository->findAllPaginated($page)]
-    //        );
-    //    }
-    //
-    //    /**
-    //     * View action.
-    //     *
-    //     * @param  \Silex\Application $app Silex application
-    //     * @param  string             $id  Element Id
-    //     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
-    //     */
-    //    public function viewAction(Application $app, $id)
-    //    {
-    //        $userRepository = new UserRepository($app['db']);
-    //        return $app['twig']->render(
-    //            'user/view.html.twig',
-    //            ['user' => $userRepository->getUserById($id)]
-    //        );
-    //    }
-    //
-    //    /**
-    //     * Profile action.
-    //     *
-    //     * @param  \Silex\Application $app   Silex application
-    //     * @param  string             $email Element Email
-    //     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
-    //     */
-    //    public function profileAction(Application $app)
-    //    {
-    //        $userRepository = new UserRepository($app['db']);
-    //
-    //        $id = $app['security.token_storage']->getToken()->getUser()->getID();
-    //        var_dump($id);
-    //        return $app['twig']->render(
-    //            'user/view.html.twig',
-    //            ['user' => $userRepository->getUserById($id)]
-    //        );
-    //    }
 
+    /**
+     * @param Application $app
+     * @param int         $page
+     * @return mixed
+     */
+    public function indexInvites(Application $app, $page = 1)
+    {
+        $friendsRepository = new FriendsRepository($app['db']);
+        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+        return $app['twig']->render(
+            'friends/invites.html.twig',
+            ['paginator' => $friendsRepository->findAllInvitesPaginated($page, $userId)]
+        );
+    }
 
+    /**
+     * @param Application $app
+     * @param $id
+     * @return mixed
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     */
+    public function deleteAction(Application $app, $id)
+    {
+        $friendsRepository = new FriendsRepository($app['db']);
+        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+        $friendsRepository -> delete($userId, $id);
 
+        return $app['twig']->render(
+            'friends/index.html.twig',
+            ['paginator' => $friendsRepository->findAllPaginated(1, $userId)]
+        );
+    }
+
+    /**
+     * @param Application $app
+     * @param Request     $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function editAction(Application $app, Request $request)
     {
         $user = [];

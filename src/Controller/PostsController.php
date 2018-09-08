@@ -19,18 +19,15 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
  */
 class PostsController implements ControllerProviderInterface
 {
+
     /**
-     * Routing settings.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return \Silex\ControllerCollection Result
+     * @param Application $app
+     * @return mixed|\Silex\ControllerCollection
      */
 
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        //        $controller->get('/', [$this, 'indexAction'])->bind('posts_index_paginated');
         $controller->get('/page/{page}', [$this, 'indexAction'])
             ->assert('page', '[1-9]\d*')
             ->value('page', 1)
@@ -38,23 +35,20 @@ class PostsController implements ControllerProviderInterface
         $controller->match('/add', [$this, 'addAction'])
             ->method('POST|GET')
             ->bind('posts_add');
-        //        $controller->match('/{id}/delete', [$this, 'deleteAction'])
-        //            ->method('GET|POST')
-        //            ->assert('id', '[1-9]\d*')
-        //            ->bind('posts_delete');
+
         return $controller;
     }
 
 
     /**
-     * Index action.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return string Response
+     * @param Application $app
+     * @param int         $page
+     * @return mixed
      */
     public function indexAction(Application $app, $page = 1)
     {
+        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+
         $postsRepository = new PostsRepository($app['db']);
 
         $post = [];
@@ -66,8 +60,7 @@ class PostsController implements ControllerProviderInterface
 
         return $app['twig']->render(
             'posts/index.html.twig',
-
-            ['paginator' => $postsRepository->findAllPaginated($page),
+            ['paginator' => $postsRepository->findAllPaginated($page, $userId),
                 'form' => $form->createView(),
             ]
         );
@@ -75,16 +68,17 @@ class PostsController implements ControllerProviderInterface
 
 
     /**
-     * Add action.
+     * .
      *
-     * @param \Silex\Application                        $app     Silex application
-     * @param \Symfony\Component\HttpFoundation\Request $request HTTP Request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
+     * @param  Application $app
+     * @param  Request     $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function addAction(Application $app, Request $request)
     {
         $post = [];
+        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
 
         $form = $app['form.factory']->createBuilder(
             PostType::class,
@@ -94,7 +88,7 @@ class PostsController implements ControllerProviderInterface
 
         if ($form->isSubmitted() && $form->isValid()) {
             $postsRepository = new PostsRepository($app['db']);
-            $postsRepository->save($form->getData());
+            $postsRepository->save($form->getData(), $userId);
 
             $app['session']->getFlashBag()->add(
                 'messages',
@@ -107,60 +101,4 @@ class PostsController implements ControllerProviderInterface
             return $app->redirect($app['url_generator']->generate('posts_index_paginated'), 301);
         }
     }
-
-    //
-    //    /**
-    //     * Delete action.
-    //     *
-    //     * @param \Silex\Application                        $app     Silex application
-    //     * @param int                                       $id      Record id
-    //     * @param \Symfony\Component\HttpFoundation\Request $request HTTP Request
-    //     *
-    //     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
-    //     */
-    //    public function deleteAction(Application $app, $id, Request $request)
-    //    {
-    //        $tagsRepository = new TagsRepository($app['db']);
-    //        $tag = $tagsRepository->findOneById($id);
-    //
-    //        if (!$tag) {
-    //            $app['session']->getFlashBag()->add(
-    //                'messages',
-    //                [
-    //                    'type' => 'warning',
-    //                    'message' => 'message.record_not_found',
-    //                ]
-    //            );
-    //
-    //            return $app->redirect($app['url_generator']->generate('tags_index'));
-    //        }
-    //
-    //        $form = $app['form.factory']->createBuilder(FormType::class, $tag)->add('id', HiddenType::class)->getForm();
-    //        $form->handleRequest($request);
-    //
-    //        if ($form->isSubmitted() && $form->isValid()) {
-    //            $tagsRepository->delete($form->getData());
-    //
-    //            $app['session']->getFlashBag()->add(
-    //                'messages',
-    //                [
-    //                    'type' => 'success',
-    //                    'message' => 'message.element_successfully_deleted',
-    //                ]
-    //            );
-    //
-    //            return $app->redirect(
-    //                $app['url_generator']->generate('tags_index'),
-    //                301
-    //            );
-    //        }
-    //
-    //        return $app['twig']->render(
-    //            'tags/delete.html.twig',
-    //            [
-    //                'tag' => $tag,
-    //                'form' => $form->createView(),
-    //            ]
-    //        );
-    //    }
 }

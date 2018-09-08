@@ -18,16 +18,13 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
- * Class PostsController.
+ * Class ChatController.
  */
 class ChatController implements ControllerProviderInterface
 {
     /**
-     * Routing settings.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return \Silex\ControllerCollection Result
+     * @param Application $app
+     * @return mixed|\Silex\ControllerCollection
      */
 
     public function connect(Application $app)
@@ -46,7 +43,9 @@ class ChatController implements ControllerProviderInterface
 
     /**
      * @param Application $app
-     * @param $userId
+     * @param Request     $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
      */
 
@@ -58,7 +57,7 @@ class ChatController implements ControllerProviderInterface
 
         $friendsRepository = new friendsRepository($app['db']);
 
-        $friends = $friendsRepository -> friendsNames();
+        $friends = $friendsRepository -> friendsNames($userId);
         //        var_dump($friends);
 
         foreach($friends as $k) {
@@ -80,7 +79,7 @@ class ChatController implements ControllerProviderInterface
 
         if ($form->isSubmitted()) {
             $chatRepository = new ChatRepository($app['db']);
-            $chatRepository->addChat($form->getData(), $id);
+            $chatRepository->addChat($form->getData(), $id, $userId);
 
             $app['session']->getFlashBag()->add(
                 'conversations',
@@ -89,6 +88,8 @@ class ChatController implements ControllerProviderInterface
                     'message' => 'message.element_successfully_added',
                 ]
             );
+            return $app->redirect($app['url_generator']->generate('chat_index'), 301);
+
         }
         return $app['twig']->render(
             'chat/new.html.twig',
@@ -98,12 +99,12 @@ class ChatController implements ControllerProviderInterface
             ]
         );
     }
+
     /**
-     * Index action.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return string Response
+     * @param Application $app
+     * @param int         $page
+     * @param $id
+     * @return mixed
      */
     public function indexAction(Application $app, $page = 1, $id)
     {

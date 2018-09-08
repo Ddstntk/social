@@ -1,6 +1,6 @@
 <?php
 /**
- * Bookmarks controller.
+ * User controller.
  *
  * @copyright (c) 2016 Tomasz Chojna
  *
@@ -21,18 +21,14 @@ use Form\EditType;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 /**
- * Class BookmarksController.
+ * Class UserController.
  */
 class UserController implements ControllerProviderInterface
 {
     /**
-     * Routing settings.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return \Silex\ControllerCollection Result
+     * @param Application $app
+     * @return mixed|\Silex\ControllerCollection
      */
-
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
@@ -46,11 +42,9 @@ class UserController implements ControllerProviderInterface
     }
 
     /**
-     * Index action.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return string Response
+     * @param Application $app
+     * @param int         $page
+     * @return mixed
      */
     public function indexAction(Application $app, $page = 1)
     {
@@ -64,11 +58,10 @@ class UserController implements ControllerProviderInterface
     }
 
     /**
-     * View action.
-     *
-     * @param  \Silex\Application $app Silex application
-     * @param  string             $id  Element Id
-     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
+     * @param Application $app
+     * @param $id
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function viewAction(Application $app, $id)
     {
@@ -80,11 +73,9 @@ class UserController implements ControllerProviderInterface
     }
 
     /**
-     * Profile action.
-     *
-     * @param  \Silex\Application $app   Silex application
-     * @param  string             $email Element Email
-     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
+     * @param Application $app
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function profileAction(Application $app)
     {

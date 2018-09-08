@@ -33,6 +33,17 @@ class UserRepository
         $this->db = $db;
     }
 
+    public function getIdByEmail($email)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
+        $id = $queryBuilder ->select('u.PK_idUsers')
+            ->from('users', 'u')
+            ->where('u.email = :email')
+            ->setParameter(':email', $email)
+            ->execute()->fetch();
+
+        return $id;
+    }
     /**
      * Gets user data by login.
      *
@@ -188,6 +199,12 @@ class UserRepository
         }
     }
 
+    /**
+     * @param int               $page
+     * @param $friendsRepository
+     * @param $userId
+     * @return array
+     */
     public function findAllPaginated($page = 1, $friendsRepository, $userId)
     {
         $countQueryBuilder = $this->findStrangers($friendsRepository, $userId)
@@ -202,30 +219,31 @@ class UserRepository
         return $paginator->getCurrentPageResults();
     }
 
+    /**
+     * @param $friendsRepository
+     * @param $userId
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    protected function findStrangers($friendsRepository, $userId)
+    {
 
-//where($qb->expr()->notIn('rl.request_id', $nots))
+        $queryBuilder = $this->db->createQueryBuilder();
+        $friends = $friendsRepository->getFriendsIds($userId)->execute();
 
-        protected function findStrangers($friendsRepository, $userId)
-        {
+        return $queryBuilder->select(
+            'k.PK_idUsers',
+            'k.name',
+            'k.surname',
+            'k.photo',
+            'k.role_id',
+            'k.birthDate'
+        )
+            ->from('users', 'k')
+            ->where($queryBuilder -> expr()->notIn('k.PK_idUsers', $friends))
+            ->andWhere('k.PK_idUsers <> :userId')
+            ->setParameters(array(':userId' => $userId, ':friendId' => 1));
 
-            $queryBuilder = $this->db->createQueryBuilder();
-            $friends = $friendsRepository->getFriendsIds($userId)->execute();
-
-            return $queryBuilder->select(
-                'k.PK_idUsers',
-                'k.name',
-                'k.surname',
-                'k.idPicture',
-                'k.role_id',
-                'k.birthDate'
-            )
-                ->from('users', 'k')
-//                ->innerJoin('k', 'friends', 'f', 'k.PK_idUsers = f.FK_idUserA')
-                ->where($queryBuilder -> expr()->notIn('k.PK_idUsers',$friends))
-                ->andWhere('k.PK_idUsers <> :userId')
-                ->setParameters(array(':userId' => $userId, ':friendId' => 1));
-
-        }
+    }
 
 
     protected function queryAll()
@@ -237,7 +255,7 @@ class UserRepository
             'u.name',
             'u.surname',
             'u.email',
-            'u.idPicture',
+            'u.photo',
             'u.role_id',
             'u.birthDate'
         )

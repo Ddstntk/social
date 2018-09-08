@@ -7,7 +7,7 @@ namespace Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Utils\Paginator;
-
+use Repository\FriendsRepository;
 /**
  * Class PostsRepository.
  */
@@ -55,14 +55,18 @@ class PostsRepository
      *
      * @return array Result
      */
-    public function findAllPaginated($page = 1)
+    public function findAllPaginated($page = 1, $userId)
     {
-        $queryBuilder = $this->queryAll();
+        $queryBuilder = $this->queryAll()->leftJoin('p', 'friends', 'f', 'f.FK_idUserA = p.FK_idUsers')
+            ->where('p.visibility = 1')
+            ->orWhere('f.FK_idUserB = :userId')
+            ->orWhere('p.FK_idUsers = :userId')
+            ->setParameter(':userId', $userId);
         $queryBuilder->setFirstResult(($page - 1) * static::NUM_ITEMS)
             ->setMaxResults(static::NUM_ITEMS);
 
+        //        $friendsRepository->
         $pagesNumber = $this->countAllPages();
-
 
         $paginator = [
             'page' => ($page < 1 || $page > $pagesNumber) ? 1 : $page,
@@ -74,6 +78,10 @@ class PostsRepository
         return $paginator;
     }
 
+    /**
+     * @param $id
+     * @return array|mixed
+     */
     public function findOneById($id)
     {
         $queryBuilder = $this->queryAll();
@@ -114,7 +122,7 @@ class PostsRepository
      *
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function save($post)
+    public function save($post, $userId)
     {
         $this->db->beginTransaction();
 
@@ -131,7 +139,7 @@ class PostsRepository
             } else {
                 // add new record
                 $post['created_at'] = $currentDateTime->format('Y-m-d H:i:s');
-                $post['FK_idUsers'] = 1;
+                $post['FK_idUsers'] = $userId;
                 $this->db->insert('posts', $post);
             }
             $this->db->commit();
@@ -174,9 +182,11 @@ class PostsRepository
         $queryBuilder = $this->db->createQueryBuilder();
 
         return $queryBuilder->select(
-            'p.PK_idPosts',
+            'DISTINCT p.PK_idPosts',
             'u.name',
             'u.surname',
+            'p.FK_idUsers',
+            'p.visibility',
             'p.content',
             'p.idMedia',
             'p.created_at',

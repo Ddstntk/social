@@ -11,21 +11,23 @@ use Silex\Api\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Repository\UserRepository;
 use Form\SignupType;
+use Service\userTokenService;
 /**
  * Class AuthController.
  */
 class AuthController implements ControllerProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @param Application $app
+     * @return mixed|\Silex\ControllerCollection
      */
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        $controller->match('login', [$this, 'loginAction'])
+        $controller->match('/login', [$this, 'loginAction'])
             ->method('GET|POST')
             ->bind('auth_login');
-        $controller->get('logout', [$this, 'logoutAction'])
+        $controller->get('/logout', [$this, 'logoutAction'])
             ->bind('auth_logout');
         $controller->get('/signup', [$this, 'signupAction'])
             ->method('POST|GET')
@@ -35,18 +37,17 @@ class AuthController implements ControllerProviderInterface
     }
 
     /**
-     * Login action.
-     *
-     * @param \Silex\Application                        $app     Silex application
-     * @param \Symfony\Component\HttpFoundation\Request $request HTTP Request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
+     * @param Application $app
+     * @param Request     $request
+     * @return mixed
      */
     public function loginAction(Application $app, Request $request)
     {
         $user = ['email' => $app['session']->get('_security.last_username')];
         $form = $app['form.factory']->createBuilder(LoginType::class, $user)->getForm();
-
+        //        $userToken->setUserId(1);
+        //        $app['user_token']->setUserId(5);
+        $app['session']->set('userid', $user);
         return $app['twig']->render(
             'auth/login.html.twig',
             [
@@ -58,11 +59,10 @@ class AuthController implements ControllerProviderInterface
 
 
     /**
-     * Sign Up
-     *
-     * @param  Application $app
-     * @param  Request     $request
+     * @param Application $app
+     * @param Request     $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function signupAction(Application $app, Request $request)
     {
@@ -100,12 +100,10 @@ class AuthController implements ControllerProviderInterface
             array('form' => $form->createView())
         );
     }
+
     /**
-     * Logout action.
-     *
-     * @param \Silex\Application $app Silex application
-     *
-     * @return \Symfony\Component\HttpFoundation\Response HTTP Response
+     * @param Application $app
+     * @return mixed
      */
     public function logoutAction(Application $app)
     {

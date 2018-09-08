@@ -9,7 +9,7 @@ use Doctrine\DBAL\DBALException;
 use Utils\Paginator;
 
 /**
- * Class ChayRepository.
+ * Class FriendsRepository.
  */
 class FriendsRepository
 {
@@ -48,27 +48,33 @@ class FriendsRepository
         return $queryBuilder->execute()->fetchAll();
     }
 
-    public function friendsNames()
+    public function friendsNames($userId)
     {
+
         $queryBuilder = $this->db->createQueryBuilder();
 
-        $x =$queryBuilder->select(
-            'u.PK_idUsers',
-            'u.name',
-            'u.surname'
+        $x = $queryBuilder->select(
+            'y.PK_idUsers',
+            'y.name',
+            'y.surname'
         )
-            ->from('users', 'u');
+            ->from('users', 'y')
+            ->innerJoin('y', 'friends', 'f', 'y.PK_idUsers = f.FK_idUserA')
+            ->innerJoin('f', 'users', 'u', 'u.PK_idUsers = f.FK_idUserB')
+            ->where('u.PK_idUsers = :userId')
+            ->setParameters(array(':userId'=> $userId));
 
         return $x->execute()->fetchAll();
+
     }
+
     /**
-     *  Add record
-     *
-     * @param int                          $userId current user id
-     *
-     * @param int friendId added friend id
+     * @param $userId
+     * @param $friendId
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
      */
-    public function addFriend($userId, $friendId)
+    public function invite($userId, $friendId)
     {
 
         try {
@@ -81,18 +87,10 @@ class FriendsRepository
             $relation['FK_idUserA'] = $userId;
             $relation['FK_idUserB'] = $friendId;
 
-            $this->db->insert('friends', $relation);
+            $this->db->insert('invitations', $relation);
 
             $this->db->commit();
 
-            $this->db->beginTransaction();
-
-            $relation['FK_idUserB'] = $userId;
-            $relation['FK_idUserA'] = $friendId;
-
-            $this->db->insert('friends', $relation);
-
-            $this->db->commit();
         } catch (DBALException $e) {
             $this->db->rollBack();
             throw $e;
@@ -102,113 +100,77 @@ class FriendsRepository
     /**
      * @param $userId
      * @param $friendId
-     * @return int
-     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
+    public function addFriend($userId, $friendId)
+    {
+
+        try {
+            $relation = [];
+
+            $this->db->beginTransaction();
+
+            // add new record
+            $relation['FK_idUserA'] = $userId;
+            $relation['FK_idUserB'] = $friendId;
+
+            $this->db->insert('friends', $relation);
+            $this->db->commit();
+
+            $this->db->beginTransaction();
+            $queryBuilder = $this->db->createQueryBuilder();
+
+            $queryBuilder -> delete('invitations')
+                ->where('FK_idUserA = '.$userId)
+                ->andWhere('FK_idUserB = '.$friendId)
+                ->execute();
+            $this->db->commit();
+
+            $this->db->beginTransaction();
+
+            $relation['FK_idUserB'] = $userId;
+            $relation['FK_idUserA'] = $friendId;
+
+            $this->db->insert('friends', $relation);
+            $this->db->commit();
+
+            $this->db->beginTransaction();
+            $queryBuilder = $this->db->createQueryBuilder();
+
+            $queryBuilder -> delete('invitations')
+                ->where('FK_idUserB = '.$userId)
+                ->andWhere('FK_idUserA = '.$friendId)
+                ->execute();
+            $this->db->commit();
+
+        } catch (DBALException $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * @param $userId
+     * @param $friendId
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
      */
 
 
-    public function deleteFriend($userId, $friendId)
+    public function delete($userId, $friendId)
     {
+        $this->db->beginTransaction();
 
-        return $this->db->delete('si_tags', ['id' => $friend['id']]);
+        try {
+            $this->db->delete('friends', ['FK_idUserA' => $userId, 'FK_idUserB' => $friendId]);
+            $this->db->delete('friends', ['FK_idUserA' => $friendId, 'FK_idUserB' => $userId]);
+            $this->db->commit();
+        } catch (DBALException $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
     }
-
-    //    /**
-    //     * Get records paginated.
-    //     *
-    //     * @param int $page Current page number
-    //     *
-    //     * @return array Result
-    //     */
-    //    public function findAllPaginated($page, $userId, $id)
-    //    {
-    //        $countQueryBuilder = $this->queryAll($page)
-    //            ->select('COUNT(DISTINCT m.PK_time) AS total_results')
-    //            ->where('m.FK_idConversations = 1')
-    //            ->setMaxResults(100);
-    //
-    //        $queryBuilder = $this->db->createQueryBuilder();
-    //        $result =
-    //            $queryBuilder->select('m.PK_time', 'm.content', 'u.name', 'u.surname')
-    //                ->from('messages', 'm')
-    //                ->innerJoin('m', 'participants', 'p', 'p.FK_idConversations = m.FK_idConversations')
-    //                ->innerJoin('m', 'users', 'u', 'u.PK_idUsers = m.FK_idUsers')
-    //                ->where('p.FK_idUsers = :userId',
-    //                    'm.FK_idConversations = :id')
-    //                ->orderBy('m.PK_time', 'DESC')
-    //                ->setParameters(array(':userId'=> $userId, ':id' => $id));
-    //
-    //
-    //        $paginator = new Paginator($result, $countQueryBuilder);
-    //        $paginator->setCurrentPage($page);
-    //        $paginator->setMaxPerPage(static::NUM_ITEMS);
-    //
-    //        return $paginator->getCurrentPageResults();
-    //    }
-
-    //
-    //    /**
-    //     * Save record.
-    //     *
-    //     * @param array $post Post
-    //     *
-    //     * @throws \Doctrine\DBAL\DBALException
-    //     */
-    //    public function save($message, $userId, $id = 1)
-    //    {
-    //        $this->db->beginTransaction();
-    //
-    //
-    //        $queryBuilder = $this->db->createQueryBuilder();
-    //        $verifyUser =
-    //            $queryBuilder->select('p.FK_idUsers')
-    //                ->from('participants', 'p')
-    //                ->innerJoin('p', 'messages', 'm', 'p.FK_idConversations = m.FK_idConversations')
-    //                ->where('p.FK_idUsers = :userId',
-    //                    'm.FK_idConversations = :id')
-    //                ->orderBy('m.PK_time', 'DESC')
-    //                ->setParameters(array(':userId'=> $userId, ':id' => $id));
-    //
-    //        try {
-    //            $currentDateTime = new \DateTime();
-    //            unset($message['messages']);
-    //
-    //            // add new record
-    //            $message['PK_time'] = $currentDateTime->format('Y-m-d H:i:s');
-    //            $message['FK_idUsers'] = $userId;
-    //            $message['FK_idConversations'] = 1 ;
-    //            $this->db->insert('messages', $message);
-    //
-    //            $this->db->commit();
-    //        } catch (DBALException $e) {
-    //            $this->db->rollBack();
-    //            throw $e;
-    //        }
-    //    }
-
-    //    /**
-    //     * Remove record.
-    //     *
-    //     * @param array $post Post
-    //     *
-    //     * @throws \Doctrine\DBAL\DBALException
-    //     *
-    //     * @return boolean Result
-    //     */
-    //    public function delete($post)
-    //    {
-    //        $this->db->beginTransaction();
-    //
-    //        try {
-    //            $this->removeLinkedTags($post['id']);
-    //            $this->db->delete('posts', ['id' => $post['id']]);
-    //            $this->db->commit();
-    //        } catch (DBALException $e) {
-    //            $this->db->rollBack();
-    //            throw $e;
-    //        }
-    //    }
-
     /**
      * @param int $page
      * @return array
@@ -226,6 +188,28 @@ class FriendsRepository
         return $paginator->getCurrentPageResults();
     }
 
+    /**
+     * @param int    $page
+     * @param $userId
+     * @return array
+     */
+    public function findAllInvitesPaginated($page = 1, $userId)
+    {
+        $countQueryBuilder = $this->findInvites($userId)
+            ->select('COUNT(DISTINCT u.PK_idUsers) AS total_results')
+            ->setMaxResults(1);
+
+        $paginator = new Paginator($this->findInvites($userId), $countQueryBuilder);
+        $paginator->setCurrentPage($page);
+        $paginator->setMaxPerPage(100);
+
+        return $paginator->getCurrentPageResults();
+    }
+
+    /**
+     * @param $userId
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
     public function getFriendsIds($userId)
     {
         $queryBuilder = $this->db->createQueryBuilder();
@@ -239,6 +223,26 @@ class FriendsRepository
             ->where('u.PK_idUsers = '.$userId);
 
     }
+
+    /**
+     * @param $userId
+     * @param $friendId
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    public function areFriends($userId, $friendId)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        return $queryBuilder->select(
+            'f.FK_idUserB'
+        )
+            ->from('friends', 'f')
+            ->where('f.FK_idUserA = :userId')
+            ->andWhere('f.FK_idUserB = :friendId')
+            ->select('COUNT(DISTINCT u.PK_idUsers) AS total_results')
+            ->setParameters(array(':userId'=> $userId, ':friendId' => $friendId));
+
+    }
     /**
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
@@ -250,20 +254,41 @@ class FriendsRepository
             'y.PK_idUsers',
             'y.name',
             'y.surname',
-            'y.idPicture',
+            'y.photo',
             'y.role_id',
             'y.birthDate'
         )
             ->from('users', 'y')
             ->innerJoin('y', 'friends', 'f', 'y.PK_idUsers = f.FK_idUserA')
             ->innerJoin('f', 'users', 'u', 'u.PK_idUsers = f.FK_idUserB')
-            ->where('u.PK_idUsers = 1')
+            ->where('u.PK_idUsers = :userId')
             ->setParameters(array(':userId'=> $userId));
 
 
     }
 
+    /**
+     * @param $userId
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    protected function findInvites($userId)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
 
+        return $queryBuilder->select(
+            'y.PK_idUsers',
+            'y.name',
+            'y.surname',
+            'y.photo',
+            'y.role_id',
+            'y.birthDate'
+        )
+            ->from('users', 'y')
+            ->innerJoin('y', 'invitations', 'i', 'y.PK_idUsers = i.FK_idUserA')
+            ->innerJoin('i', 'users', 'u', 'u.PK_idUsers = i.FK_idUserB')
+            ->where('i.FK_idUserB = :userId')
+            ->setParameters(array(':userId'=> $userId));
+    }
     /**
      * Query all records.
      *

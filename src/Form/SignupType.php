@@ -1,6 +1,6 @@
 <?php
 /**
- * Tag type.
+ * Signup type.
  */
 namespace Form;
 
@@ -13,10 +13,9 @@ use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//use Validator\Constraints as CustomAssert;
 
 /**
- * Class TagType.
+ * Class SignupType.
  */
 class SignupType extends AbstractType
 {

@@ -30,18 +30,34 @@
 <body>
 
 <div class="navbar fixed-top">
-    <a href="/posts/page/1">Posty</a>
-    <a href="/friend/index">Znajomi</a>
-    <a href="/user/index">Osoby</a>
-    <a href="/chat/all">Konwersacje</a>
+    <a class="btn btn-default" href="{{ url('posts_index_paginated') }}" title="{{ 'post.index.label'|trans }}">
+        {{ 'post.index.label'|trans }}
+    </a>
+    <a class="btn btn-default" href="{{ url('friends_index_paginated') }}" title="{{ 'friend.index.label'|trans }}">
+        {{ 'friend.index.label'|trans }}
+    </a>
+    <a class="btn btn-default" href="{{ url('invites_index_paginated') }}" title="{{ 'invite.index.label'|trans }}">
+        {{ 'invite.index.label'|trans }}
+    </a>
+    <a class="btn btn-default" href="{{ url('users_index_paginated') }}" title="{{ 'user.index.label'|trans }}">
+        {{ 'user.index.label'|trans }}
+    </a>
+    <a class="btn btn-default" href="{{ url('chat_index') }}" title="{{ 'chat.index.label'|trans }}">
+        {{ 'chat.index.label'|trans }}
+    </a>
+
 </div>
 
 <div class="sidenav col-2">
     <img class="img-fluid " style="width: 100%"
          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxQhGXAcJBNKSrbAA3LowecuQDGJkxUHpOpu-t1dP0kctRBWYx">
-    <a href="/user/profile">Twój profil</a>
+    <a class="btn btn-default" href="{{ url('user_profile') }}" title="{{ 'user.profile.label'|trans }}">
+        {{ 'user.profile.label'|trans }}
+    </a>
     <a href="#">Zdjęcia</a>
-    <a href="/user/edit">Ustawienia konta</a>
+    <a class="btn btn-default" href="{{ url('user_edit') }}" title="{{ 'user.edit.label'|trans }}">
+        {{ 'user.edit.label'|trans }}
+    </a>
     <a class="btn btn-default" href="{{ url('auth_logout') }}" title="{{ 'auth.logout.label'|trans }}">
         {{ 'auth.logout.label'|trans }}
     </a>
