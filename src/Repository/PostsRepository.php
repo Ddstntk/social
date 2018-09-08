@@ -1,6 +1,13 @@
 <?php
 /**
  * Posts repository.
+ *
+ * @category  Social Media
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
 namespace Repository;
 
@@ -158,13 +165,24 @@ class PostsRepository
      *
      * @return boolean Result
      */
-    public function delete($post)
+    public function delete($id)
     {
-        $this->db->beginTransaction();
 
         try {
-            $this->removeLinkedTags($post['id']);
-            $this->db->delete('posts', ['id' => $post['id']]);
+            $this->db->beginTransaction();
+            $queryBuilder = $this->db->createQueryBuilder();
+
+            $queryBuilder -> delete('posts')
+                ->where('PK_idPosts = '.$id)
+                ->execute();
+            $this->db->commit();
+
+            $this->db->beginTransaction();
+            $queryBuilder = $this->db->createQueryBuilder();
+
+            $queryBuilder -> delete('comments')
+                ->where('FK_idPosts = '.$id)
+                ->execute();
             $this->db->commit();
         } catch (DBALException $e) {
             $this->db->rollBack();

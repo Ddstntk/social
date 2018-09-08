@@ -1,6 +1,13 @@
 <?php
 /**
  * Post type.
+ *
+ * @category  Social Media
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
 namespace Form;
 
@@ -50,12 +57,9 @@ class PostType extends AbstractType
                 ChoiceType::class, array(
                 'label' => 'label.visibility',
                 'choices'  => array(
-                'Znajomi' => 0,
-                'Wszyscy'=> 1,
+                'label.friends' => 0,
+                'label.everyone'=> 1,
                 )
-                //            'attr' => array(
-                //                'style' => 'height: 300px;'
-                //            ),
                 )
             );
     }

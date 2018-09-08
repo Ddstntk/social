@@ -1,10 +1,142 @@
 <?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="file.ext">
+    <file source-language="pl" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="title.bookmarks_list">
-                <source>title.bookmarks_list</source>
-                <target>Lista zakładek</target>
+            <trans-unit id="user.profile.label">
+                <source>user.profile.label</source>
+                <target>Twój profil</target>
+            </trans-unit>
+            <trans-unit id="user.edit.label">
+                <source>user.edit.label</source>
+                <target>Ustawienia konta</target>
+            </trans-unit>
+            <trans-unit id="photo.add.label">
+                <source>photo.add.label</source>
+                <target>Zmień zdjęcie profilowe</target>
+            </trans-unit>
+            <trans-unit id="auth.logout.label">
+                <source>auth.logout.label</source>
+                <target>Wyloguj się</target>
+            </trans-unit>
+            <trans-unit id="post.index.label">
+                <source>post.index.label</source>
+                <target>Posty</target>
+            </trans-unit>
+            <trans-unit id="friend.index.label">
+                <source>friend.index.label</source>
+                <target>Znajomi</target>
+            </trans-unit>
+            <trans-unit id="invite.index.label">
+                <source>invite.index.label</source>
+                <target>Zaproszenia</target>
+            </trans-unit>
+            <trans-unit id="user.index.label">
+                <source>user.index.label</source>
+                <target>Użytkownicy</target>
+            </trans-unit>
+            <trans-unit id="chat.index.label">
+                <source>chat.index.label</source>
+                <target>Zmień chat</target>
+            </trans-unit>
+            <trans-unit id="action.save">
+                <source>action.save</source>
+                <target>Wyślij</target>
+            </trans-unit>
+            <trans-unit id="label.nav.next">
+                <source>label.nav.next</source>
+                <target>Następna strona</target>
+            </trans-unit>
+            <trans-unit id="label.nav.prev">
+                <source>label.nav.next</source>
+                <target>Poprzednia strona</target>
+            </trans-unit>
+            <trans-unit id="label.content">
+                <source>label.content</source>
+                <target>Treść</target>
+            </trans-unit>
+            <trans-unit id="label.visibility">
+                <source>label.visibility</source>
+                <target>Widoczność</target>
+            </trans-unit>
+            <trans-unit id="label.friends">
+                <source>label.friends</source>
+                <target>Znajomi</target>
+            </trans-unit>
+            <trans-unit id="label.everyone">
+                <source>label.everyone</source>
+                <target>Wszyscy</target>
+            </trans-unit>
+            <trans-unit id="comments.index.label">
+                <source>comments.index.label</source>
+                <target>Komentarze</target>
+            </trans-unit>
+            <trans-unit id="user.view.label">
+                <source>user.view.label</source>
+                <target>Zobacz profil</target>
+            </trans-unit>
+            <trans-unit id="friend.delete.label">
+                <source>friend.delete.label</source>
+                <target>Usuń znajomość</target>
+            </trans-unit>
+            <trans-unit id="friend.accept.label">
+                <source>friend.accept.label</source>
+                <target>Zaakceptuj</target>
+            </trans-unit>
+            <trans-unit id="friend.invite.label">
+                <source>friend.invite.label</source>
+                <target>Zaproś</target>
+            </trans-unit>
+            <trans-unit id="chat.add.label">
+                <source>chat.add.label</source>
+                <target>Dodaj nowy czat</target>
+            </trans-unit>
+            <trans-unit id="chat.all.label">
+                <source>chat.all.label</source>
+                <target>Twoje konwersacje</target>
+            </trans-unit>
+            <trans-unit id="post.conversation_new">
+                <source>post.conversation_new</source>
+                <target>Dodaj użytkowników do konwersacji</target>
+            </trans-unit>
+            <trans-unit id="select.users.label">
+                <source>select.users.label</source>
+                <target>Wybierz znajomych</target>
+            </trans-unit>
+            <trans-unit id="action.addChat">
+                <source>action.addChat</source>
+                <target>Dodaj konwersację</target>
+            </trans-unit>
+            <trans-unit id="label.name">
+                <source>label.name</source>
+                <target>Imię</target>
+            </trans-unit>
+            <trans-unit id="label.surname">
+                <source>label.surname</source>
+                <target>Nazwisko</target>
+            </trans-unit>
+            <trans-unit id="label.email">
+                <source>label.email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="label.password">
+                <source>label.password</source>
+                <target>Hasło</target>
+            </trans-unit>
+            <trans-unit id="title.photo_add">
+                <source>title.photo_add</source>
+                <target>Zmień zdjęcie</target>
+            </trans-unit>
+            <trans-unit id="label.photo">
+                <source>label.photo</source>
+                <target>Wybierz z dysku</target>
+            </trans-unit>
+            <trans-unit id="label.actions">
+                <source>label.actions</source>
+                <target>Akcje</target>
+            </trans-unit>
+            <trans-unit id="label.back_to_list">
+                <source>label.back_to_list</source>
+                <target>Powrót</target>
             </trans-unit>
         </body>
     </file>

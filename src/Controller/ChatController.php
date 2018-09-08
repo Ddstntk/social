@@ -19,6 +19,13 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Class ChatController.
+ *
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social Media
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
 class ChatController implements ControllerProviderInterface
 {

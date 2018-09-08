@@ -1,4 +1,15 @@
+
 <?php
+/**
+ * PhotosRepository
+ *
+ * @category  Social Media
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
+ */
 namespace Repository;
 
 use Doctrine\DBAL\Connection;
@@ -37,16 +48,16 @@ use Utils\Paginator;class PhotosRepository
      */
     public function save($photo, $userId)
     {
-//        if (isset($photo['id']) && ctype_digit((string) $photo['id'])) {
+        //        if (isset($photo['id']) && ctype_digit((string) $photo['id'])) {
             // update record
-//            $id = $photo['id'];
+        //            $id = $photo['id'];
             unset($photo['id']);
             var_dump($photo);
             return $this->db->update('users', $photo, ['PK_idUsers' => $userId]);
-//        } else {
-//            // add new record
-//            return $this->db->insert('users', $photo);
-//        }
+        //        } else {
+        //            // add new record
+        //            return $this->db->insert('users', $photo);
+        //        }
     }
-// ...
+    // ...
 }

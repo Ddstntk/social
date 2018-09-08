@@ -1,6 +1,13 @@
 <?php
 /**
  * Signup type.
+ *
+ * @category  Social Media
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
 namespace Form;
 

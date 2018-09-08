@@ -2,9 +2,12 @@
 /**
  * User controller.
  *
- * @copyright (c) 2016 Tomasz Chojna
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social Media
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  *
- * @link http://epi.chojna.info.pl
+ * Collage project - social network
  */
 namespace Controller;
 
@@ -50,7 +53,7 @@ class UserController implements ControllerProviderInterface
     {
         $userRepository = new UserRepository($app['db']);
         $friendsRepository = new FriendsRepository($app['db']);
-        $userId = 1;
+        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
         return $app['twig']->render(
             'user/index.html.twig',
             ['paginator' => $userRepository->findAllPaginated($page, $friendsRepository, $userId)]

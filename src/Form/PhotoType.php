@@ -1,6 +1,13 @@
 <?php
 /**
  * Photo type.
+ *
+ * @category  Social Media
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
 
 namespace Form;
@@ -22,26 +29,7 @@ class PhotoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        $builder->add(
-//            'name',
-//            TextType::class,
-//            [
-//                'label' => 'label.name',
-//                'required' => true,
-//                'attr' => [
-//                    'max_length' => 128,
-//                ],
-//                'constraints' => [
-//                    new Assert\NotBlank(),
-//                    new Assert\Length(
-//                        [
-//                            'min' => 3,
-//                            'max' => 128,
-//                        ]
-//                    ),
-//                ],
-//            ]
-//        );
+
         $builder->add(
             'photo',
             FileType::class,

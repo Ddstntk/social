@@ -2,9 +2,141 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="title.bookmarks_list">
-                <source>title.bookmarks_list</source>
-                <target>Bookmarks List</target>
+            <trans-unit id="user.profile.label">
+                <source>user.profile.label</source>
+                <target>Your profile</target>
+            </trans-unit>
+            <trans-unit id="user.edit.label">
+                <source>user.edit.label</source>
+                <target>Account settings</target>
+            </trans-unit>
+            <trans-unit id="photo.add.label">
+                <source>photo.add.label</source>
+                <target>Change profile picture</target>
+            </trans-unit>
+            <trans-unit id="auth.logout.label">
+                <source>auth.logout.label</source>
+                <target>Logout</target>
+            </trans-unit>
+            <trans-unit id="post.index.label">
+                <source>post.index.label</source>
+                <target>Posts</target>
+            </trans-unit>
+            <trans-unit id="friend.index.label">
+                <source>friend.index.label</source>
+                <target>Friends</target>
+            </trans-unit>
+            <trans-unit id="invite.index.label">
+                <source>invite.index.label</source>
+                <target>Invites</target>
+            </trans-unit>
+            <trans-unit id="user.index.label">
+                <source>user.index.label</source>
+                <target>Users</target>
+            </trans-unit>
+            <trans-unit id="chat.index.label">
+                <source>chat.index.label</source>
+                <target>Change chat</target>
+            </trans-unit>
+            <trans-unit id="action.save">
+                <source>action.save</source>
+                <target>Send</target>
+            </trans-unit>
+            <trans-unit id="label.nav.next">
+                <source>label.nav.next</source>
+                <target>Next page</target>
+            </trans-unit>
+            <trans-unit id="label.nav.prev">
+                <source>label.nav.next</source>
+                <target>Previous page</target>
+            </trans-unit>
+            <trans-unit id="label.content">
+                <source>label.content</source>
+                <target>Content</target>
+            </trans-unit>
+            <trans-unit id="label.visibility">
+                <source>label.visibility</source>
+                <target>Visibility</target>
+            </trans-unit>
+            <trans-unit id="label.friends">
+                <source>label.friends</source>
+                <target>Friends</target>
+            </trans-unit>
+            <trans-unit id="label.everyone">
+                <source>label.everyone</source>
+                <target>Everyone</target>
+            </trans-unit>
+            <trans-unit id="comments.index.label">
+                <source>comments.index.label</source>
+                <target>Comments</target>
+            </trans-unit>
+            <trans-unit id="user.view.label">
+                <source>user.view.label</source>
+                <target>View user</target>
+            </trans-unit>
+            <trans-unit id="friend.delete.label">
+                <source>friend.delete.label</source>
+                <target>Delete friend</target>
+            </trans-unit>
+            <trans-unit id="friend.accept.label">
+                <source>friend.accept.label</source>
+                <target>Accept</target>
+            </trans-unit>
+            <trans-unit id="friend.invite.label">
+                <source>friend.invite.label</source>
+                <target>Invite</target>
+            </trans-unit>
+            <trans-unit id="chat.add.label">
+                <source>chat.add.label</source>
+                <target>Add new chat</target>
+            </trans-unit>
+            <trans-unit id="chat.all.label">
+                <source>chat.all.label</source>
+                <target>Your chats</target>
+            </trans-unit>
+            <trans-unit id="post.conversation_new">
+                <source>post.conversation_new</source>
+                <target>Add users to new chat</target>
+            </trans-unit>
+            <trans-unit id="select.users.label">
+                <source>select.users.label</source>
+                <target>Select users</target>
+            </trans-unit>
+            <trans-unit id="action.addChat">
+                <source>action.addChat</source>
+                <target>Add new chat</target>
+            </trans-unit>
+            <trans-unit id="label.name">
+                <source>label.name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="label.surname">
+                <source>label.surname</source>
+                <target>Surname</target>
+            </trans-unit>
+            <trans-unit id="label.email">
+                <source>label.email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="label.password">
+                <source>label.password</source>
+                <target>Password</target>
+            </trans-unit>
+            <trans-unit id="title.photo_add">
+                <source>title.photo.add</source>
+                <target>Change picture</target>
+            </trans-unit>
+            <trans-unit id="label.photo">
+                <source>label.photo</source>
+                <target>Upload from computer</target>
+            </trans-unit>
+            <trans-unit id="label.actions">
+                <source>label.actions</source>
+                <target>Actions</target>
+            </trans-unit>
+            <trans-unit id="label.back_to_list">
+                <source>label.back_to_list</source>
+                <target>Back to list</target>
             </trans-unit>
         </body>
     </file>

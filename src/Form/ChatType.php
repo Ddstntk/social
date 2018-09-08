@@ -1,6 +1,13 @@
 <?php
 /**
  * Chat type.
+ *
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social Media
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
 namespace Form;
 
@@ -27,12 +34,10 @@ class ChatType extends AbstractType
     {
         $builder->add(
             'selectUsers', ChoiceType::class, array(
+                'label' => 'select.users.label',
             'multiple' => true,
             'expanded' => true,
             'choices'  => $options['data'],
-            //            'attr' => array(
-            //                'style' => 'height: 300px;'
-            //            ),
             )
         );
     }

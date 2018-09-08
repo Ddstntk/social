@@ -38,13 +38,15 @@ $app['config.photos_directory'] = __DIR__.'/../web/uploads/photos';
 $app['config.download_photos_directory'] = '/uploads/photos';
 
 
-$app['twig'] = $app->extend('twig', function ($twig, $app) {
-    // add custom globals, filters, tags, ...
-    $twig->addGlobal('photos_directory', $app['config.photos_directory']);
-    $twig->addGlobal('download_photos_directory', $app['config.download_photos_directory']);
+$app['twig'] = $app->extend(
+    'twig', function ($twig, $app) {
+        // add custom globals, filters, tags, ...
+        $twig->addGlobal('photos_directory', $app['config.photos_directory']);
+        $twig->addGlobal('download_photos_directory', $app['config.download_photos_directory']);
 
-    return $twig;
-});
+        return $twig;
+    }
+);
 
 
 /**

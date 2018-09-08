@@ -1,8 +1,14 @@
 <?php
 /**
  * Login form.
+ *
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social Media
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
-
 namespace Form;
 
 use Symfony\Component\Form\AbstractType;

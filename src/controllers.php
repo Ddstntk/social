@@ -2,9 +2,7 @@
 /**
  * Routing and controllers.
  *
- * @copyright (c) 2016 Tomasz Chojna
- *
- * @link http://epi.chojna.info.pl
+ * @copyright (c) 2018 Konrad Szewczuk
  */
 
 
@@ -15,6 +13,7 @@ use Controller\ChatController;
 use Controller\FriendsController;
 use Controller\CommentsController;
 use Controller\PhotosController;
+use Controller\AdminController;
 
 $app->mount('/user', new UserController());
 $app->mount('/posts', new PostsController());
@@ -23,3 +22,4 @@ $app->mount('/chat', new ChatController());
 $app->mount('/friend', new FriendsController());
 $app->mount('/comment', new CommentsController());
 $app->mount('/photo', new PhotosController());
+$app->mount('/admin', new AdminController());

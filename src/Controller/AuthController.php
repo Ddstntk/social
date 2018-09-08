@@ -14,6 +14,13 @@ use Form\SignupType;
 use Service\userTokenService;
 /**
  * Class AuthController.
+ *
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social Media
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
 class AuthController implements ControllerProviderInterface
 {
@@ -45,8 +52,6 @@ class AuthController implements ControllerProviderInterface
     {
         $user = ['email' => $app['session']->get('_security.last_username')];
         $form = $app['form.factory']->createBuilder(LoginType::class, $user)->getForm();
-        //        $userToken->setUserId(1);
-        //        $app['user_token']->setUserId(5);
         $app['session']->set('userid', $user);
         return $app['twig']->render(
             'auth/login.html.twig',

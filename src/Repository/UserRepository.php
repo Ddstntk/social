@@ -1,8 +1,14 @@
 <?php
 /**
  * User repository
+ *
+ * @category  Social Media
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
-
 namespace Repository;
 
 use Doctrine\DBAL\Connection;
@@ -217,6 +223,85 @@ class UserRepository
         $paginator->setMaxPerPage(100);
 
         return $paginator->getCurrentPageResults();
+    }
+
+    /**
+     * @return array
+     */
+    public function findAll()
+    {
+        $queryBuilder = $this->queryAll();
+
+        return $queryBuilder->execute()->fetchAll();
+    }
+
+    /**
+     * @param $id
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
+    public function delete($id)
+    {
+
+        $this->db->beginTransaction();
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder -> delete('friends')
+            ->where('FK_idUserA = '.$id)
+            ->orWhere('FK_idUserB = '.$id)
+            ->execute();
+        $this->db->commit();
+
+        $this->db->beginTransaction();
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder -> delete('invitations')
+            ->where('FK_idUserA = '.$id)
+            ->orWhere('FK_idUserB = '.$id)
+            ->execute();
+        $this->db->commit();
+
+        $this->db->beginTransaction();
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder -> delete('comments')
+            ->where('FK_idUsers = '.$id)
+            ->execute();
+        $this->db->commit();
+
+
+        $this->db->beginTransaction();
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder -> delete('posts')
+            ->where('FK_idUsers = '.$id)
+            ->execute();
+        $this->db->commit();
+
+        $this->db->beginTransaction();
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder -> delete('messages')
+            ->where('FK_idUsers = '.$id)
+            ->execute();
+        $this->db->commit();
+
+        $this->db->beginTransaction();
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder -> delete('participants')
+            ->where('FK_idUsers = '.$id)
+            ->execute();
+        $this->db->commit();
+
+        $this->db->beginTransaction();
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder -> delete('users')
+            ->where('PK_idUsers = '.$id)
+            ->execute();
+        $this->db->commit();
+
+
     }
 
     /**

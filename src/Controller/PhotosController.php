@@ -1,6 +1,13 @@
 <?php
 /**
  * Photos controller.
+ *
+ * @author    Konrad Szewczuk
+ * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social Media
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ *
+ * Collage project - social network
  */
 namespace Controller;
 
@@ -19,11 +26,11 @@ class PhotosController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-//        $controller->get('/add', [$this, 'addAction'])->bind('photo_add');
+        //        $controller->get('/add', [$this, 'addAction'])->bind('photo_add');
         $controller->match('/add', [$this, 'addAction'])
             ->method('POST|GET')
             ->bind('photo_add');
-//        $controller->get('/add', [$this, 'addAction'])->bind('photo_add');
+        //        $controller->get('/add', [$this, 'addAction'])->bind('photo_add');
 
 
         return $controller;
@@ -61,10 +68,10 @@ class PhotosController implements ControllerProviderInterface
                 ]
             );
 
-//            return $app->redirect(
-//                $app['url_generator']->generate('user_profile'),
-//                301
-//            );
+            //            return $app->redirect(
+            //                $app['url_generator']->generate('user_profile'),
+            //                301
+            //            );
             var_dump($fileUploader);
         }
 
@@ -76,5 +83,5 @@ class PhotosController implements ControllerProviderInterface
             ]
         );
     }
-// ...
+    // ...
 }

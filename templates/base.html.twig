@@ -54,7 +54,9 @@
     <a class="btn btn-default" href="{{ url('user_profile') }}" title="{{ 'user.profile.label'|trans }}">
         {{ 'user.profile.label'|trans }}
     </a>
-    <a href="#">Zdjęcia</a>
+    <a class="btn btn-default" href="{{ url('photo_add') }}" title="{{ 'photo.add.label'|trans }}">
+        {{ 'photo.add.label'|trans }}
+    </a>
     <a class="btn btn-default" href="{{ url('user_edit') }}" title="{{ 'user.edit.label'|trans }}">
         {{ 'user.edit.label'|trans }}
     </a>
@@ -70,17 +72,9 @@
     </div>
     <div name="chat" class="chat col-2 offset-md-7">
         {#<button type="button" data-src = "/chat/view/3">TRUDNY DO PRZEOCZENIA PRZYCISK</button>#}
-        <iframe id = "sendChat" class="mt-0" height="20%" width="400px" src="/chat/send/2"></iframe>
+        <iframe id = "sendChat" class="mt-0" height="20%" width="400px" src="{{ url('chat_index_paginated', {id:2}) }}"></iframe>
         <iframe id = "myChat" class="mb-0" height="700px" width="400px" src="/chat/view/2"></iframe>
-        {#<script>#}
-            {#$('button').click(function () {#}
-                {#$('#iframe').attr('src',#}
-                {#$(this).data('data-src'))#}
-            {#})#}
-        {#</script>#}
     </div>
-{#{% include 'default/_flash_messages.html.twig' %}#}
-{#{% block body %}{% endblock %}#}
 
 
 {% block javascripts %}
