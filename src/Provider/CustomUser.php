@@ -1,12 +1,14 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
+/**
+ * Custom User Implementation
  *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 
 namespace Provider;
@@ -14,114 +16,201 @@ namespace Provider;
 
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+
 /**
- * User is the user implementation used by the in-memory user provider.
+ * Class CustomUser
  *
- * This should not be used for anything else.
- *
- * @author Fabien Potencier <fabien@symfony.com>
+ * @category  Social_Network
+ * @package   Provider
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 final class CustomUser implements AdvancedUserInterface
 {
-    private $id;
-    private $username;
-    private $password;
-    private $enabled;
-    private $accountNonExpired;
-    private $credentialsNonExpired;
-    private $accountNonLocked;
-    private $roles;
 
+    /**
+     * Logged user id
+     *
+     * @var
+     */
+    private $_id;
+    /**
+     * Logged user username
+     *
+     * @var
+     */
+    private $_username;
+    /**
+     * Logged user password
+     *
+     * @var
+     */
+    private $_password;
+    /**
+     * User status
+     *
+     * @var bool
+     */
+    private $_enabled;
+    /**
+     * Account status
+     *
+     * @var bool
+     */
+    private $_accountNonExpired;
+    /**
+     * Credentials status
+     *
+     * @var bool
+     */
+    private $_credentialsNonExpired;
+    /**
+     * Account lock status
+     *
+     * @var bool
+     */
+    private $_accountNonLocked;
+    /**
+     * Logged user roles
+     *
+     * @var array
+     */
+    private $_roles;
+
+    /**
+     * CustomUser constructor.
+     *
+     * @param User  $id                    Id
+     * @param User  $username              Username
+     * @param User  $password              Password
+     * @param array $roles                 Role
+     * @param bool  $enabled               Is enabled
+     * @param bool  $userNonExpired        Haven't expired
+     * @param bool  $credentialsNonExpired Credentials not expired
+     * @param bool  $userNonLocked         User non locekd
+     */
     public function __construct($id, $username, $password, array $roles = array(), $enabled = true, $userNonExpired = true, $credentialsNonExpired = true, $userNonLocked = true)
     {
         if ('' === $username || null === $username) {
             throw new \InvalidArgumentException('The username cannot be empty.');
         }
 
-        $this->id = $id;
-        $this->username = $username;
-        $this->password = $password;
-        $this->enabled = $enabled;
-        $this->accountNonExpired = $userNonExpired;
-        $this->credentialsNonExpired = $credentialsNonExpired;
-        $this->accountNonLocked = $userNonLocked;
-        $this->roles = $roles;
+        $this->_id = $id;
+        $this->_username = $username;
+        $this->_password = $password;
+        $this->_enabled = $enabled;
+        $this->_accountNonExpired = $userNonExpired;
+        $this->_credentialsNonExpired = $credentialsNonExpired;
+        $this->_accountNonLocked = $userNonLocked;
+        $this->_roles = $roles;
     }
 
+    /**
+     * To string
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->getUsername();
     }
 
+    /**
+     * Get id
+     *
+     * @return mixed
+     */
     public function getId()
     {
-        return $this->id;
+        return $this->_id;
     }
+
     /**
-     * {@inheritdoc}
+     * Get roles
+     *
+     * @return array
      */
     public function getRoles()
     {
-        return $this->roles;
+        return $this->_roles;
     }
 
     /**
-     * {@inheritdoc}
+     * Get password
+     *
+     * @return string
      */
     public function getPassword()
     {
-        return $this->password;
+        return $this->_password;
     }
 
     /**
-     * {@inheritdoc}
+     * Get salt
+     *
+     * @return null|string|void
      */
     public function getSalt()
     {
     }
 
     /**
-     * {@inheritdoc}
+     * Get username
+     *
+     * @return string
      */
     public function getUsername()
     {
-        return $this->username;
+        return $this->_username;
     }
 
     /**
-     * {@inheritdoc}
+     * Check if account not expired
+     *
+     * @return bool
      */
     public function isAccountNonExpired()
     {
-        return $this->accountNonExpired;
+        return $this->_accountNonExpired;
     }
 
     /**
-     * {@inheritdoc}
+     * Check if account not locked
+     *
+     * @return bool
      */
     public function isAccountNonLocked()
     {
-        return $this->accountNonLocked;
+        return $this->_accountNonLocked;
     }
 
     /**
-     * {@inheritdoc}
+     * Check if credentials not expired
+     *
+     * @return bool
      */
     public function isCredentialsNonExpired()
     {
-        return $this->credentialsNonExpired;
+        return $this->_credentialsNonExpired;
     }
 
     /**
-     * {@inheritdoc}
+     * Check if user is enabled
+     *
+     * @return bool
      */
     public function isEnabled()
     {
-        return $this->enabled;
+        return $this->_enabled;
     }
 
     /**
+     * Erase credentials
      * {@inheritdoc}
+     *
+     * @return nothing
      */
     public function eraseCredentials()
     {

@@ -1,0 +1,50 @@
+<?php
+/**
+ * Unique Email constraint.
+ *
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ */
+namespace Validator\Constraints;
+
+use Symfony\Component\Validator\Constraint;
+
+/**
+ * Class UniqueTag.
+ *
+ * @category  Social_Network
+ * @package   Constraint
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ */
+class UniqueEmail extends Constraint
+{
+    /**
+     * Message.
+     *
+     * @var string $message
+     */
+    public $message = 'message.email.exists';
+
+    /**
+     * Element id.
+     *
+     * @var int|string|null $elementId
+     */
+    public $email = null;
+
+    /**
+     * User repository.
+     *
+     * @var null|\Repository\UserRepository $repository
+     */
+    public $repository = null;
+
+
+}

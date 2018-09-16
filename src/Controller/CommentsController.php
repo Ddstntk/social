@@ -2,14 +2,14 @@
 /**
  * Comments controller.
  *
- * @copyright (c) 2018 Konrad Szewczuk
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
- * @category  Social Media
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
+
 namespace Controller;
 
 use Silex\Application;
@@ -23,11 +23,21 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Class PostsController.
+ *
+ * @category  Social_Network
+ * @package   Controller
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class CommentsController implements ControllerProviderInterface
 {
     /**
-     * @param Application $app
+     * Routing settings
+     *
+     * @param Application $app Application
+     *
      * @return mixed|\Silex\ControllerCollection
      */
     public function connect(Application $app)
@@ -44,12 +54,13 @@ class CommentsController implements ControllerProviderInterface
     }
 
     /**
-     * @param Application $app
-     * @param $postId
-     * @param int         $page
-     * @param Request     $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Doctrine\DBAL\DBALException
+     * Index action
+     *
+     * @param Application $app    Application
+     * @param Post        $postId Id
+     * @param int         $page   Page
+     *
+     * @return mixed
      */
     public function indexAction(Application $app, $postId, $page = 1)
     {
@@ -66,7 +77,7 @@ class CommentsController implements ControllerProviderInterface
         return $app['twig']->render(
             'comments/index.html.twig',
             [
-                'paginator' => $commentsRepository->findAllPaginated($page, $postId),
+                'paginator' => $commentsRepository->findAllPaginated($postId, $page),
                 'xd' => $postsRepository->findOneById($postId),
                 'post' => $post,
                 'form' => $form->createView()]
@@ -75,9 +86,12 @@ class CommentsController implements ControllerProviderInterface
 
 
     /**
-     * @param Application $app
-     * @param int         $page
-     * @param Request     $request
+     * Add comment action
+     *
+     * @param Application $app     Application
+     * @param int         $page    Page
+     * @param Request     $request Request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -93,7 +107,7 @@ class CommentsController implements ControllerProviderInterface
         $x = $request->headers->get('referer');
         var_dump($x);
 
-        if(preg_match("/\/(\d+)$/", $x, $matches)) {
+        if (preg_match("/\/(\d+)$/", $x, $matches)) {
             $id=$matches[1];
         }
         if ($form->isSubmitted() && $form->isValid()) {
@@ -104,7 +118,7 @@ class CommentsController implements ControllerProviderInterface
                 'messages',
                 [
                     'type' => 'success',
-                    'message' => 'message.element_successfully_added',
+                    'message' => 'message.comment_successfully_added',
                 ]
             );
 

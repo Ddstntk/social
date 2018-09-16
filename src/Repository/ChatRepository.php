@@ -2,12 +2,12 @@
 /**
  * Chat repository.
  *
- * @category  Social Media
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Repository;
 
@@ -16,37 +16,48 @@ use Doctrine\DBAL\DBALException;
 use Utils\Paginator;
 
 /**
- * Class PostsRepository.
+ * Class ChatRepository
+ *
+ * @category  Social_Network
+ * @package   Repository
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class ChatRepository
 {
     /**
      * Number of items per page.
      *
-     * const int NUM_ITEMS
+     * Const int NUM_ITEMS
      */
     const NUM_ITEMS = 50;
 
     /**
      * Doctrine DBAL connection.
      *
-     * @var \Doctrine\DBAL\Connection $db
+     * @var \Doctrine\DBAL\Connection $db Database connection
      */
     protected $db;
 
     /**
      * PostsRepository constructor.
      *
-     * @param \Doctrine\DBAL\Connection $db
+     * @param \Doctrine\DBAL\Connection $db Database connection
      */
     public function __construct(Connection $db)
     {
         $this->db = $db;
     }
+
     /**
-     * Fetch all records.
+     * Fetch all records
      *
-     * @return array Result
+     * @param User $userId Id
+     * @param Chat $id     Id
+     *
+     * @return array
      */
     public function findAll($userId, $id)
     {
@@ -56,13 +67,16 @@ class ChatRepository
     }
 
     /**
-     * @param $userId
+     * Find all chats
+     *
+     * @param User $userId user
+     *
      * @return mixed
      */
     public function findAllChats($userId)
     {
         $queryBuilder = $this->db->createQueryBuilder();
-
+        $usersList = [];
         $queryBuilder->select('p.FK_idConversations')
             ->from('participants', 'p')
             ->innerJoin('p', 'users', 'u', 'p.FK_idUsers = u.PK_idUsers')
@@ -73,13 +87,11 @@ class ChatRepository
 
         $convList = $queryBuilder->execute()->fetchAll();
 
-        foreach ($convList as $key=>$value)
-        {
+        foreach ($convList as $key=>$value) {
             unset($queryBuilder);
             $queryBuilder = $this->db->createQueryBuilder();
 
             $convId = $value['FK_idConversations'];
-            //            var_dump($convId);
             $queryBuilder->select('u.PK_idUsers', 'u.name', 'u.surname', 'p.FK_idConversations')
                 ->from('users', 'u')
                 ->innerJoin('u', 'participants', 'p', 'u.PK_idUsers = p.FK_idUsers')
@@ -95,15 +107,16 @@ class ChatRepository
 
     }
 
-
     /**
-     * Get records paginated.
+     * Find all paginated
      *
-     * @param int $page Current page number
+     * @param User $userId Id
+     * @param Chat $id     Id
+     * @param int  $page   Page
      *
-     * @return array Result
+     * @return array
      */
-    public function findAllPaginated($page = 1, $userId, $id)
+    public function findAllPaginated($userId, $id, $page = 1)
     {
         $queryBuilder = $this->queryAll($userId, $id);
         $queryBuilder->setFirstResult(($page - 1) * static::NUM_ITEMS)
@@ -123,11 +136,14 @@ class ChatRepository
     }
 
     /**
-     * Count all pages.
+     * Count all pages
      *
-     * @return int Result
+     * @param User $userId Id
+     * @param Chat $id     Id
+     *
+     * @return float|int
      */
-    protected function countAllPages( $userId, $id)
+    protected function countAllPages($userId, $id)
     {
         $pagesNumber = 1;
 
@@ -147,28 +163,30 @@ class ChatRepository
     }
 
     /**
-     * Save record.
+     * Save record
      *
-     * @param array $post Post
+     * @param Message $message object
+     * @param User    $userId  Id
+     * @param Chat    $id      Id
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
+     *
+     * @return nothing
      */
     public function save($message, $userId, $id)
     {
         $this->db->beginTransaction();
-
-
         $queryBuilder = $this->db->createQueryBuilder();
-        $verifyUser =
-            $queryBuilder->select('p.FK_idUsers')
-                ->from('participants', 'p')
-                ->innerJoin('p', 'messages', 'm', 'p.FK_idConversations = m.FK_idConversations')
-                ->where(
-                    'p.FK_idUsers = :userId',
-                    'm.FK_idConversations = :id'
-                )
-                ->orderBy('m.PK_time', 'DESC')
-                ->setParameters(array(':userId'=> $userId, ':id' => $id));
+        $verifyUser = $queryBuilder->select('p.FK_idUsers')
+            ->from('participants', 'p')
+            ->innerJoin('p', 'messages', 'm', 'p.FK_idConversations = m.FK_idConversations')
+            ->where(
+                'p.FK_idUsers = :userId',
+                'm.FK_idConversations = :id'
+            )
+            ->orderBy('m.PK_time', 'DESC')
+            ->setParameters(array(':userId'=> $userId, ':id' => $id));
 
         try {
             $currentDateTime = new \DateTime();
@@ -188,13 +206,17 @@ class ChatRepository
     }
 
     /**
-     * @param $participants
-     * @param int          $id
-     * @param $userId
+     * Add new chat
+     *
+     * @param Participants $participants Object
+     * @param User         $userId       Id
+     *
      * @throws DBALException
-     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Doctrine\DBAL\
+     *
+     * @return nothing
      */
-    public function addChat($participants, $id = 2, $userId)
+    public function addChat($participants, $userId)
     {
         //        $conn = $this->getDoctrine()->getConnection();
         $this->db->beginTransaction();
@@ -215,11 +237,9 @@ class ChatRepository
 
         $data['FK_idConversations'] = $lastInsert;
 
-        //        var_dump($participants['selectUsers']);
         $data['FK_idUsers'] = $userId;
         $this->db->insert('participants', $data);
-        foreach ($participants['selectUsers'] as $p)
-        {
+        foreach ($participants['selectUsers'] as $p) {
             //            $this->db->beginTransaction();
 
             $data['FK_idUsers'] = $p;
@@ -229,10 +249,14 @@ class ChatRepository
         }
 
     }
+
     /**
-     * Query all records.
+     * Query all records
      *
-     * @return \Doctrine\DBAL\Query\QueryBuilder Result
+     * @param User $userId Id
+     * @param Chat $id     Id
+     * 
+     * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     protected function queryAll($userId, $id)
     {

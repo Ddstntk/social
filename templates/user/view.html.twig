@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Bookmarks
+    Profile
 {% endblock %}
 {#{% block profilepic %}../../files/img/{{ user.idPicture }}.jpg{% endblock %}#}
 {% block body %}
 {% if user is defined and user|length %}
     <div class="card w-100 text-center" style="width: 18rem;">
-        <img src="{{  asset(download_photos_directory ~ '/' ~ user. photo) }}" alt="{{ user.photo }}">
+        <img class="w-50 ml-auto mr-auto" src="{{  asset(download_photos_directory ~ '/' ~ user. photo) }}" alt="{{ user.photo }}">
         <div class="card-body">
             <h5 class="card-title">{{ user.name }} {{ user.surname }}</h5>
             <h6 class="card-title">{{ user.birthDate }}</h6>

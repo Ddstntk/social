@@ -2,12 +2,12 @@
 /**
  * User controller.
  *
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
- * @category  Social Media
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Controller;
 
@@ -18,18 +18,29 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Repository\UserRepository;
 use Repository\FriendsRepository;
-
+use Form\PswdType;
 use Form\SignupType;
 use Form\EditType;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
- * Class UserController.
+ * Class UserController
+ *
+ * @category  Social_Network
+ * @package   Controller
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class UserController implements ControllerProviderInterface
 {
     /**
-     * @param Application $app
+     * Routing settings
+     *
+     * @param Application $app Application
+     *
      * @return mixed|\Silex\ControllerCollection
      */
     public function connect(Application $app)
@@ -41,12 +52,18 @@ class UserController implements ControllerProviderInterface
         $controller->match('/edit', [$this, 'editAction'])
             ->method('GET|POST')
             ->bind('user_edit');
+        $controller->match('/password', [$this, 'changePassword'])
+            ->method('GET|POST')
+            ->bind('password_change');
         return $controller;
     }
 
     /**
-     * @param Application $app
-     * @param int         $page
+     * Index action
+     *
+     * @param Application $app  Application
+     * @param int         $page Page
+     *
      * @return mixed
      */
     public function indexAction(Application $app, $page = 1)
@@ -56,15 +73,17 @@ class UserController implements ControllerProviderInterface
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
         return $app['twig']->render(
             'user/index.html.twig',
-            ['paginator' => $userRepository->findAllPaginated($page, $friendsRepository, $userId)]
+            ['paginator' => $userRepository->findAllPaginated($friendsRepository, $userId, $page)]
         );
     }
 
     /**
-     * @param Application $app
-     * @param $id
+     * View action
+     *
+     * @param Application $app Application
+     * @param User        $id  Id
+     *
      * @return mixed
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function viewAction(Application $app, $id)
     {
@@ -76,9 +95,11 @@ class UserController implements ControllerProviderInterface
     }
 
     /**
-     * @param Application $app
+     * Profile action
+     *
+     * @param Application $app Application
+     *
      * @return mixed
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function profileAction(Application $app)
     {
@@ -93,40 +114,52 @@ class UserController implements ControllerProviderInterface
     }
 
     /**
-     * @param Application $app
-     * @param Request     $request
+     * Edit action
+     *
+     * @param Application $app     Application
+     * @param Request     $request HttpRequest
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
      */
-
     public function editAction(Application $app, Request $request)
     {
         $user = [];
+        $userTmp = [];
+        $id = $app['security.token_storage']->getToken()->getUser()->getID();
+        $userRepository = new UserRepository($app['db']);
 
         $form = $app['form.factory']->createBuilder(
             EditType::class,
-            $user
+            $user,
+            ['user_repository' => new UserRepository($app['db'])]
         )->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository = new UserRepository($app['db']);
+        if ($form->isSubmitted() && $form->isValid() && !empty($form)) {
 
-            $user = $form->getData();
-            $password = $user['password'];
-            $user['password'] = $app['security.encoder.bcrypt']->encodePassword(
-                $password,
-                ''
-            );
-            $userRepository->save($user);
+            $userTmp = $form->getData();
 
-            $app['session']->getFlashBag()->add(
-                'messages',
-                [
-                    'type' => 'success',
-                    'message' => 'message.element_successfully_added',
-                ]
-            );
+
+            foreach ($userTmp as $key => $value) {
+                if (isset($value)) {
+                    $user[$key] = $value;
+                }
+            }
+
+            if (sizeof($user)) {
+                $user['PK_idUsers'] = $id;
+                $userRepository->save($user);
+
+                $app['session']->getFlashBag()->add(
+                    'messages',
+                    [
+                        'type' => 'success',
+                        'message' => 'message.account_successfully_edited',
+                    ]
+                );
+            }
 
             return $app->redirect($app['url_generator']->generate('user_profile'), 301);
         }
@@ -134,6 +167,60 @@ class UserController implements ControllerProviderInterface
 
         return $app['twig']->render(
             'user/edit.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+
+    /**
+     * Change password
+     *
+     * @param Application $app     Application
+     * @param Request     $request HttpRequest
+     * 
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function changePassword(Application $app, Request $request)
+    {
+        $user = [];
+        $userTmp = [];
+        $id = $app['security.token_storage']->getToken()->getUser()->getID();
+        $userRepository = new UserRepository($app['db']);
+
+        $form = $app['form.factory']->createBuilder(
+            PswdType::class,
+            $user,
+            ['user_repository' => new UserRepository($app['db'])]
+        )->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && !empty($form)) {
+
+            $user = $form->getData();
+
+            $password = $user['password'];
+            $user['password'] = $app['security.encoder.bcrypt']->encodePassword($password, '');
+            $user['PK_idUsers'] = $id;
+            if (sizeof($user)) {
+                $userRepository->save($user);
+
+                $app['session']->getFlashBag()->add(
+                    'messages',
+                    [
+                        'type' => 'success',
+                        'message' => 'message.account_successfully_edited',
+                    ]
+                );
+            }
+
+            var_dump($user);
+        }
+
+
+
+        return $app['twig']->render(
+            'user/pswd.html.twig',
             array('form' => $form->createView())
         );
     }

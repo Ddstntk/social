@@ -1,6 +1,13 @@
 <?php
 /**
  * User provider.
+ *
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Provider;
 
@@ -13,7 +20,14 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 //use CustomUser;
 
 /**
- * Class UserProvider.
+ * Class UserProvider
+ *
+ * @category  Social_Network
+ * @package   Provider
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class UserProvider implements UserProviderInterface
 {
@@ -27,7 +41,7 @@ class UserProvider implements UserProviderInterface
     /**
      * TagRepository constructor.
      *
-     * @param \Doctrine\DBAL\Connection $db
+     * @param \Doctrine\DBAL\Connection $db Database
      */
     public function __construct(Connection $db)
     {
@@ -35,11 +49,11 @@ class UserProvider implements UserProviderInterface
     }
 
     /**
-     * Load user by username.
+     * Load user by username
      *
-     * @param string $login User login
+     * @param string $email Email
      *
-     * @return CustomUser Result
+     * @return CustomUser|UserInterface Userinterface
      */
     public function loadUserByUsername($email)
     {
@@ -57,11 +71,11 @@ class UserProvider implements UserProviderInterface
     }
 
     /**
-     * Refresh user.
+     * Refresh user
      *
-     * @param UserInterface $user User
+     * @param UserInterface $user User instance
      *
-     * @return CustomUser Result
+     * @return CustomUser|UserInterface Userinterface
      */
     public function refreshUser(UserInterface $user)
     {

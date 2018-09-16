@@ -2,12 +2,12 @@
 /**
  * Posts controller.
  *
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
- * @category  Social Media
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Controller;
 
@@ -21,15 +21,24 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Class PostsController.
+ *
+ * @category  Social_Network
+ * @package   Controller
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class PostsController implements ControllerProviderInterface
 {
 
     /**
-     * @param Application $app
+     * Routing settings
+     *
+     * @param Application $app Application
+     *
      * @return mixed|\Silex\ControllerCollection
      */
-
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
@@ -46,8 +55,11 @@ class PostsController implements ControllerProviderInterface
 
 
     /**
-     * @param Application $app
-     * @param int         $page
+     * Index action
+     *
+     * @param Application $app  Application
+     * @param int         $page Page
+     *
      * @return mixed
      */
     public function indexAction(Application $app, $page = 1)
@@ -65,7 +77,7 @@ class PostsController implements ControllerProviderInterface
 
         return $app['twig']->render(
             'posts/index.html.twig',
-            ['paginator' => $postsRepository->findAllPaginated($page, $userId),
+            ['paginator' => $postsRepository->findAllPaginated($userId, $page),
                 'form' => $form->createView(),
             ]
         );
@@ -73,10 +85,11 @@ class PostsController implements ControllerProviderInterface
 
 
     /**
-     * .
+     * Add post action
      *
-     * @param  Application $app
-     * @param  Request     $request
+     * @param Application $app     Application
+     * @param Request     $request HttpRequest
+     * 
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Doctrine\DBAL\DBALException
      */

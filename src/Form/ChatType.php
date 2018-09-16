@@ -2,12 +2,12 @@
 /**
  * Chat type.
  *
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
- * @category  Social Media
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Form;
 
@@ -21,14 +21,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 //use Validator\Constraints as CustomAssert;
 
 /**
- * Class ChatType.
+ * Class ChatType
+ *
+ * @category  Social_Network
+ * @package   Form
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class ChatType extends AbstractType
 {
 
     /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
+     * Form builder
+     *
+     * @param FormBuilderInterface $builder Form builder
+     * @param array                $options Form options
+     *
+     * @return nothing
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -43,7 +54,11 @@ class ChatType extends AbstractType
     }
 
     /**
-     * @param OptionsResolver $resolver
+     * Options configuration
+     *
+     * @param OptionsResolver $resolver Options resolver
+     *
+     * @return noting
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -55,7 +70,9 @@ class ChatType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * Get prefix
+     *
+     * @return null|string
      */
     public function getBlockPrefix()
     {

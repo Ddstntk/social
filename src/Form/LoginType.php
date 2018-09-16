@@ -1,13 +1,13 @@
 <?php
 /**
- * Login form.
+ * Access type.
  *
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
- * @category  Social Media
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Form;
 
@@ -19,12 +19,24 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class LoginType.
+ * Class AccessType.
+ *
+ * @category  Social_Network
+ * @package   Form
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class LoginType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * Form builder
+     *
+     * @param FormBuilderInterface $builder Form builder
+     * @param array                $options Form options
+     *
+     * @return none
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -73,7 +85,9 @@ class LoginType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * Get Prefix
+     *
+     * @return null|string
      */
     public function getBlockPrefix()
     {

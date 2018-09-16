@@ -1,25 +1,36 @@
-
 <?php
 /**
  * PhotosRepository
  *
- * @category  Social Media
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
-use Utils\Paginator;class PhotosRepository
+use Utils\Paginator;
+
+/**
+ * Class PhotosRepository
+ *
+ * @category  Social_Network
+ * @package   Repository
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ */
+class PhotosRepository
 {
     /**
      * Number of items per page.
      *
-     * const int NUM_ITEMS
+     * Const int NUM_ITEMS
      */
     const NUM_ITEMS = 100;
 
@@ -33,31 +44,26 @@ use Utils\Paginator;class PhotosRepository
     /**
      * PostsRepository constructor.
      *
-     * @param \Doctrine\DBAL\Connection $db
+     * @param \Doctrine\DBAL\Connection $db Database connection
      */
     public function __construct(Connection $db)
     {
         $this->db = $db;
     }
+
     /**
-     * Save record.
+     * Save record
      *
-     * @param array $photo Photo
-     *
-     * @return boolean Result
+     * @param Photo $photo  object
+     * @param User  $userId Id
+     * 
+     * @return int
      */
     public function save($photo, $userId)
     {
-        //        if (isset($photo['id']) && ctype_digit((string) $photo['id'])) {
-            // update record
-        //            $id = $photo['id'];
             unset($photo['id']);
             var_dump($photo);
             return $this->db->update('users', $photo, ['PK_idUsers' => $userId]);
-        //        } else {
-        //            // add new record
-        //            return $this->db->insert('users', $photo);
-        //        }
+
     }
-    // ...
 }

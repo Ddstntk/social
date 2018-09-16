@@ -2,12 +2,12 @@
 /**
  * User repository
  *
- * @category  Social Media
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Repository;
 
@@ -16,9 +16,16 @@ use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Utils\Paginator;
 use Symfony\Component\Validator\Constraints\DateTime;
-//use Repository\FriendsRepository;
+
 /**
- * Class UserRepository.
+ * Class UserRepository
+ *
+ * @category  Social_Network
+ * @package   Repository
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class UserRepository
 {
@@ -30,15 +37,22 @@ class UserRepository
     protected $db;
 
     /**
-     * TagRepository constructor.
+     * UserRepository constructor.
      *
-     * @param \Doctrine\DBAL\Connection $db
+     * @param Connection $db Database connection
      */
     public function __construct(Connection $db)
     {
         $this->db = $db;
     }
 
+    /**
+     * Get user by email
+     *
+     * @param Email $email email
+     *
+     * @return mixed
+     */
     public function getIdByEmail($email)
     {
         $queryBuilder = $this->db->createQueryBuilder();
@@ -50,13 +64,13 @@ class UserRepository
 
         return $id;
     }
+
     /**
-     * Gets user data by login.
+     * Get user by id
      *
-     * @param  string $id User id
-     * @throws \Doctrine\DBAL\DBALException
+     * @param User $id Id
      *
-     * @return array Result
+     * @return array|mixed
      */
     public function getUserById($id)
     {
@@ -77,14 +91,13 @@ class UserRepository
     //
     //        return !$result ? [] : $result;
     //    }
+
     /**
-     * Loads user by login.
+     * Load user by email
      *
-     * @param  string $login User login
-     * @throws UsernameNotFoundException
-     * @throws \Doctrine\DBAL\DBALException
+     * @param User $email email
      *
-     * @return array Result
+     * @return array
      */
     public function loadUserByEmail($email)
     {
@@ -120,14 +133,12 @@ class UserRepository
         }
     }
 
-
     /**
-     * Gets user data by login.
+     * Get user by Email
      *
-     * @param  string $login User login
-     * @throws \Doctrine\DBAL\DBALException
+     * @param User $email email
      *
-     * @return array Result
+     * @return array|mixed
      */
     public function getUserByEmail($email)
     {
@@ -146,12 +157,11 @@ class UserRepository
 
 
     /**
-     * Gets user roles by User ID.
+     * Get user roles by userId
      *
-     * @param  integer $userId User ID
-     * @throws \Doctrine\DBAL\DBALException
+     * @param User $id Id
      *
-     * @return array Result
+     * @return array
      */
     public function getUserRoles($id)
     {
@@ -177,11 +187,14 @@ class UserRepository
     }
 
     /**
-     * Save record.
+     * Save record
      *
-     * @param array $post Post
+     * @param User $user object
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
+     *
+     * @return nothing
      */
     public function save($user)
     {
@@ -193,6 +206,8 @@ class UserRepository
                 $userId = $user['PK_idUsers'];
                 unset($user['PK_idUsers']);
                 $this->db->update('users', $user, ['PK_idUsers' => $userId]);
+                $this->db->commit();
+
             } else {
                 // add new user
                 $user['birthDate'] = $user['birthDate'] ->format('Y-m-d');
@@ -206,12 +221,32 @@ class UserRepository
     }
 
     /**
-     * @param int               $page
-     * @param $friendsRepository
-     * @param $userId
+     * Find for uniqueness
+     *
+     * @param User $email email
+     *
      * @return array
      */
-    public function findAllPaginated($page = 1, $friendsRepository, $userId)
+    public function findForUniqueness($email)
+    {
+        $queryBuilder = $this->queryAll();
+        $queryBuilder->where('u.email = :email')
+            ->setParameter(':email', $email, \PDO::PARAM_STR);
+
+
+        return $queryBuilder->execute()->fetchAll();
+    }
+
+    /**
+     * Find all users paginated
+     *
+     * @param Repository $friendsRepository Friends
+     * @param User       $userId            Id
+     * @param int        $page              Page
+     *
+     * @return array
+     */
+    public function findAllPaginated($friendsRepository, $userId, $page = 1)
     {
         $countQueryBuilder = $this->findStrangers($friendsRepository, $userId)
             ->select('COUNT(DISTINCT k.PK_idUsers) AS total_results')
@@ -226,6 +261,8 @@ class UserRepository
     }
 
     /**
+     * Find all users
+     *
      * @return array
      */
     public function findAll()
@@ -236,8 +273,13 @@ class UserRepository
     }
 
     /**
-     * @param $id
+     * Delete record
+     *
+     * @param User $id Id
+     *
      * @throws \Doctrine\DBAL\ConnectionException
+     *
+     * @return nothing
      */
     public function delete($id)
     {
@@ -305,8 +347,31 @@ class UserRepository
     }
 
     /**
-     * @param $friendsRepository
-     * @param $userId
+     * Change user access
+     *
+     * @param User $id   Id
+     * @param User $role Role
+     *
+     * @return nothing
+     */
+    public function changeAccess($id, $role)
+    {
+        $this->db->beginTransaction();
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder -> update('users', 'u')
+            ->set('u.role_id', $role)
+            ->where('PK_idUsers = :id')
+            ->setParameter(':id', $id)
+            ->execute();
+    }
+
+    /**
+     * Find all non-friends
+     *
+     * @param Repository $friendsRepository Friends
+     * @param User       $userId            Id
+     * 
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     protected function findStrangers($friendsRepository, $userId)
@@ -330,7 +395,11 @@ class UserRepository
 
     }
 
-
+    /**
+     * Query all records
+     *
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
     protected function queryAll()
     {
         $queryBuilder = $this->db->createQueryBuilder();

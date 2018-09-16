@@ -2,12 +2,12 @@
 /**
  * Message type.
  *
- * @category  Social Media
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Form;
 
@@ -18,26 +18,39 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class MessageType.
+ * Class MessageType
+ *
+ * @category  Social_Network
+ * @package   Form
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class MessageType extends AbstractType
 {
 
     /**
-     * {@inheritdoc}
+     * Form builder
+     *
+     * @param FormBuilderInterface $builder Form builder
+     * @param array                $options Form options
+     *
+     * @return none
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
 
-            'content', null, array(
+            'content',
+            TextareaType::class,
+            array(
                 'label' => false,
                 'attr' => array(
-            //                'style' => 'height: 65%; width: 100%;'
-                'rows'=> 5,
+                    'style' => 'height:55%; width:100%; resize: none',
+                'rows'=> 3,
                 ),
             ),
-            TextareaType::class,
             [
                 'required' => true,
                 'attr' => array(
@@ -60,7 +73,11 @@ class MessageType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * Options configuration
+     *
+     * @param OptionsResolver $resolver Options Resolver
+     *
+     * @return none
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -72,7 +89,9 @@ class MessageType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * Get block prefix
+     *
+     * @return null|string
      */
     public function getBlockPrefix()
     {

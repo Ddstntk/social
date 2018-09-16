@@ -2,12 +2,12 @@
 /**
  * Photos controller.
  *
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
- * @category  Social Media
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Controller;
 
@@ -19,10 +19,24 @@ use Silex\Api\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class PhotosController.
+ * Class PhotosController
+ *
+ * @category  Social_Network
+ * @package   Controller
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class PhotosController implements ControllerProviderInterface
 {
+    /**
+     * Routing settings
+     *
+     * @param Application $app Application
+     *
+     * @return mixed|\Silex\ControllerCollection
+     */
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
@@ -83,5 +97,4 @@ class PhotosController implements ControllerProviderInterface
             ]
         );
     }
-    // ...
 }

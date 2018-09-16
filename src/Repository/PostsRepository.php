@@ -2,12 +2,12 @@
 /**
  * Posts repository.
  *
- * @category  Social Media
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Repository;
 
@@ -15,15 +15,23 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Utils\Paginator;
 use Repository\FriendsRepository;
+
 /**
- * Class PostsRepository.
+ * Class PostsRepository
+ *
+ * @category  Social_Network
+ * @package   Repository
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class PostsRepository
 {
     /**
      * Number of items per page.
      *
-     * const int NUM_ITEMS
+     * Const int NUM_ITEMS
      */
     const NUM_ITEMS = 5;
 
@@ -37,16 +45,17 @@ class PostsRepository
     /**
      * PostsRepository constructor.
      *
-     * @param \Doctrine\DBAL\Connection $db
+     * @param \Doctrine\DBAL\Connection $db Database connection
      */
     public function __construct(Connection $db)
     {
         $this->db = $db;
     }
+
     /**
-     * Fetch all records.
+     * Fetch all records
      *
-     * @return array Result
+     * @return array
      */
     public function findAll()
     {
@@ -56,13 +65,14 @@ class PostsRepository
     }
 
     /**
-     * Get records paginated.
+     * Find all records paginated
      *
-     * @param int $page Current page number
+     * @param User $userId user
+     * @param int  $page   Page
      *
-     * @return array Result
+     * @return array
      */
-    public function findAllPaginated($page = 1, $userId)
+    public function findAllPaginated($userId, $page = 1)
     {
         $queryBuilder = $this->queryAll()->leftJoin('p', 'friends', 'f', 'f.FK_idUserA = p.FK_idUsers')
             ->where('p.visibility = 1')
@@ -86,7 +96,10 @@ class PostsRepository
     }
 
     /**
-     * @param $id
+     * Find one post by id
+     *
+     * @param Post $id Id
+     *
      * @return array|mixed
      */
     public function findOneById($id)
@@ -98,10 +111,11 @@ class PostsRepository
 
         return !$result ? [] : $result;
     }
+
     /**
-     * Count all pages.
+     * Count all pages
      *
-     * @return int Result
+     * @return float|int
      */
     protected function countAllPages()
     {
@@ -123,11 +137,15 @@ class PostsRepository
     }
 
     /**
-     * Save record.
+     * Save record
      *
-     * @param array $post Post
+     * @param Post $post   Id
+     * @param User $userId Id
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
+     *
+     * @return nothing
      */
     public function save($post, $userId)
     {
@@ -157,13 +175,14 @@ class PostsRepository
     }
 
     /**
-     * Remove record.
+     * Delete record
      *
-     * @param array $post Post
+     * @param Post $id Id
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
      *
-     * @return boolean Result
+     * @return nothing
      */
     public function delete($id)
     {
@@ -191,9 +210,9 @@ class PostsRepository
     }
 
     /**
-     * Query all records.
+     * Query all records
      *
-     * @return \Doctrine\DBAL\Query\QueryBuilder Result
+     * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     protected function queryAll()
     {

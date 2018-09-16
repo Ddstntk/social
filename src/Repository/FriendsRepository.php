@@ -2,12 +2,12 @@
 /**
  * Friends repository.
  *
- * @category  Social Media
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Repository;
 
@@ -16,37 +16,45 @@ use Doctrine\DBAL\DBALException;
 use Utils\Paginator;
 
 /**
- * Class FriendsRepository.
+ * Class FriendsRepository
+ *
+ * @category  Social_Network
+ * @package   Repository
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class FriendsRepository
 {
     /**
      * Number of items per page.
      *
-     * const int NUM_ITEMS
+     * Const int NUM_ITEMS
      */
     const NUM_ITEMS = 100;
 
     /**
      * Doctrine DBAL connection.
      *
-     * @var \Doctrine\DBAL\Connection $db
+     * @var \Doctrine\DBAL\Connection $db   Database connection
      */
     protected $db;
 
     /**
      * PostsRepository constructor.
      *
-     * @param \Doctrine\DBAL\Connection $db
+     * @param \Doctrine\DBAL\Connection $db Database connection
      */
     public function __construct(Connection $db)
     {
         $this->db = $db;
     }
+
     /**
-     * Fetch all records.
+     * Fetch all records
      *
-     * @return array Result
+     * @return array
      */
     public function findAll()
     {
@@ -55,6 +63,13 @@ class FriendsRepository
         return $queryBuilder->execute()->fetchAll();
     }
 
+    /**
+     * Get friends names
+     *
+     * @param User $userId Id
+     *
+     * @return array
+     */
     public function friendsNames($userId)
     {
 
@@ -76,10 +91,15 @@ class FriendsRepository
     }
 
     /**
-     * @param $userId
-     * @param $friendId
+     * Invite friend action
+     *
+     * @param User   $userId   Id
+     * @param Friend $friendId Id
+     *
      * @throws DBALException
      * @throws \Doctrine\DBAL\ConnectionException
+     *
+     * @return nothing
      */
     public function invite($userId, $friendId)
     {
@@ -105,10 +125,15 @@ class FriendsRepository
     }
 
     /**
-     * @param $userId
-     * @param $friendId
+     * Add friend action
+     *
+     * @param User   $userId   Id
+     * @param Friend $friendId Id
+     *
      * @throws DBALException
      * @throws \Doctrine\DBAL\ConnectionException
+     *
+     * @return nothing
      */
     public function addFriend($userId, $friendId)
     {
@@ -158,13 +183,16 @@ class FriendsRepository
     }
 
     /**
-     * @param $userId
-     * @param $friendId
+     * Delete friend
+     *
+     * @param User   $userId   Id
+     * @param Friend $friendId Id
+     *
      * @throws DBALException
      * @throws \Doctrine\DBAL\ConnectionException
+     *
+     * @return nothing
      */
-
-
     public function delete($userId, $friendId)
     {
         $this->db->beginTransaction();
@@ -178,11 +206,16 @@ class FriendsRepository
             throw $e;
         }
     }
+
     /**
-     * @param int $page
+     * Find all friends paginated
+     *
+     * @param User $userId Id
+     * @param int  $page   Page
+     *
      * @return array
      */
-    public function findAllPaginated($page = 1, $userId)
+    public function findAllPaginated($userId, $page = 1)
     {
         $countQueryBuilder = $this->findFriends($userId)
             ->select('COUNT(DISTINCT u.PK_idUsers) AS total_results')
@@ -196,11 +229,14 @@ class FriendsRepository
     }
 
     /**
-     * @param int    $page
-     * @param $userId
+     * Fing all invites paginated
+     *
+     * @param User $userId Id
+     * @param int  $page   Page
+     *
      * @return array
      */
-    public function findAllInvitesPaginated($page = 1, $userId)
+    public function findAllInvitesPaginated($userId, $page = 1)
     {
         $countQueryBuilder = $this->findInvites($userId)
             ->select('COUNT(DISTINCT u.PK_idUsers) AS total_results')
@@ -214,7 +250,10 @@ class FriendsRepository
     }
 
     /**
-     * @param $userId
+     * Get friends ids
+     *
+     * @param User $userId Id
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     public function getFriendsIds($userId)
@@ -232,8 +271,11 @@ class FriendsRepository
     }
 
     /**
-     * @param $userId
-     * @param $friendId
+     * Assert if users are friends
+     *
+     * @param User   $userId   Id
+     * @param Friend $friendId Id
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     public function areFriends($userId, $friendId)
@@ -250,7 +292,12 @@ class FriendsRepository
             ->setParameters(array(':userId'=> $userId, ':friendId' => $friendId));
 
     }
+
     /**
+     * Find all friends
+     *
+     * @param User $userId Id
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     protected function findFriends($userId)
@@ -275,7 +322,10 @@ class FriendsRepository
     }
 
     /**
-     * @param $userId
+     * Find all invites
+     *
+     * @param User $userId Id
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     protected function findInvites($userId)

@@ -1,13 +1,28 @@
 <?php
 /**
  * DBAL paginator.
+ *
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
+
 namespace Utils;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
  * Class Paginator.
+ *
+ * @category  Social_Network
+ * @package   Utils
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class Paginator
 {
@@ -55,6 +70,8 @@ class Paginator
      * Sets current page number.
      *
      * @param int|string $currentPage Current page number
+     *
+     * @return nothing
      */
     public function setCurrentPage($currentPage)
     {
@@ -65,6 +82,8 @@ class Paginator
      * Sets max per page results (limit).
      *
      * @param int|string $maxPerPage Max per page results
+     *
+     * @return nothing
      */
     public function setMaxPerPage($maxPerPage)
     {
@@ -124,7 +143,7 @@ class Paginator
     /**
      * Calculates current page number.
      *
-     * @param $pagesNumber Number of pages
+     * @param Int $pagesNumber Number of pages
      *
      * @return int Current page number
      */

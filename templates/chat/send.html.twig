@@ -8,5 +8,5 @@
 <script src="{{ asset('js/resetForm.js') }}"></script>
     {{ form_start(form, { method: 'post', action: url('messages_send', {'id': id}) }) }}
     {{ form_widget(form) }}
-    <input id = "chatInput" type="submit" value="{{ 'action.save'|trans }}" class="btn btn-primary btn-lg btn-block" onclick="resetForm()" />
+    <input id = "chatInput" type="submit" value="{{ 'action.save'|trans }}" class="btn btn-primary btn-lg btn-block w-100" onclick="resetForm()" />
     {{ form_end(form) }}

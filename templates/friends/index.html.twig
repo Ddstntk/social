@@ -19,12 +19,20 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ row.name }} {{ row.surname }}</h5>
                         <p class="card-text">{{ row.birthDate }}</p>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <p class="card-text">{{ 'label.access'|trans }}: {{ row.role_id }}</p>
+                        {% endif %}
                         <a class="btn btn-secondary w-100 mb-2" href="{{ url('user_view', {id: row.PK_idUsers }) }}" title="{{ 'user.view.label'|trans }}">
                             {{ 'user.view.label'|trans }}
                         </a>
-                        <a class="btn btn-danger w-100" href="{{ url('friends_delete', {id: row.PK_idUsers }) }}" title="{{ 'friend.delete.label'|trans }}">
+                        <a class="btn btn-danger w-100 mb-2" href="{{ url('friends_delete', {id: row.PK_idUsers }) }}" title="{{ 'friend.delete.label'|trans }}">
                             {{ 'friend.delete.label'|trans }}
                         </a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a class="btn btn-info" href="{{ url('admin_user_edit', {id: row.PK_idUsers }) }}" title="{{ 'admin.edit.label'|trans }}">
+                                {{ 'admin.edit.label'|trans }}
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

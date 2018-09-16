@@ -1,6 +1,13 @@
 <?php
 /**
- * Auth controller.
+ * Admin controller.
+ *
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Controller;
 
@@ -15,17 +22,20 @@ use Service\userTokenService;
 /**
  * Class AuthController.
  *
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
- * @category  Social Media
+ * @category  Social_Network
+ * @package   Controller
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 class AuthController implements ControllerProviderInterface
 {
     /**
-     * @param Application $app
+     * Routing settings
+     *
+     * @param Application $app Application
+     *
      * @return mixed|\Silex\ControllerCollection
      */
     public function connect(Application $app)
@@ -44,8 +54,11 @@ class AuthController implements ControllerProviderInterface
     }
 
     /**
-     * @param Application $app
-     * @param Request     $request
+     * Login action
+     *
+     * @param Application $app     Application
+     * @param Request     $request Request
+     * 
      * @return mixed
      */
     public function loginAction(Application $app, Request $request)
@@ -64,8 +77,11 @@ class AuthController implements ControllerProviderInterface
 
 
     /**
-     * @param Application $app
-     * @param Request     $request
+     * Signup Action
+     *
+     * @param Application $app     Application
+     * @param Request     $request Request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -92,7 +108,7 @@ class AuthController implements ControllerProviderInterface
                 'messages',
                 [
                     'type' => 'success',
-                    'message' => 'message.element_successfully_added',
+                    'message' => 'message.signup_success',
                 ]
             );
 
@@ -101,13 +117,16 @@ class AuthController implements ControllerProviderInterface
 
 
         return $app['twig']->render(
-            'user/new.html.twig',
+            'user/add.html.twig',
             array('form' => $form->createView())
         );
     }
 
     /**
-     * @param Application $app
+     * Logout action
+     *
+     * @param Application $app Application
+     *
      * @return mixed
      */
     public function logoutAction(Application $app)

@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * App.php
+ *
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ */
+
+
 use Silex\Application;
 use Silex\Provider\AssetServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -116,7 +128,7 @@ $app->register(
                 'anonymous' => true,
                 'logout' => [
                     'logout_path' => 'auth_logout',
-                //                    'target_url' => 'logout',
+                                    'target_url' => 'auth_login',
                 ],
                 'users' => function () use ($app) {
                     return new Provider\UserProvider($app['db']);
@@ -135,3 +147,4 @@ $app->register(
 );
 
 return $app;
+

@@ -2,12 +2,12 @@
 /**
  * Edit type.
  *
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
- * @category  Social Media
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Form;
 
@@ -17,17 +17,29 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-
-//use Validator\Constraints as CustomAssert;
+use Validator\Constraints as CustomAssert;
 
 /**
- * Class EditType.
+ * Class EditType
+ *
+ * @category  Social_Network
+ * @package   Form
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class EditType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * Form builder
+     *
+     * @param FormBuilderInterface $builder Form builder
+     * @param array                $options Form options
+     *
+     * @return none
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -36,15 +48,11 @@ class EditType extends AbstractType
             TextType::class,
             [
                 'label' => 'label.name',
-                'required' => true,
-                'data' => 'Default value',
+                'required' => false,
                 'attr' => [
                     'max_length' => 45,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(
-                        ['groups' => ['user-default']]
-                    ),
                     new Assert\Length(
                         [
                             'groups' => ['user-default'],
@@ -54,20 +62,16 @@ class EditType extends AbstractType
                     ),
                 ],
             ]
-        );
-        $builder->add(
+        )->add(
             'surname',
             TextType::class,
             [
                 'label' => 'label.surname',
-                'required' => true,
+                'required' => false,
                 'attr' => [
                     'max_length' => 45,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(
-                        ['groups' => ['user-default']]
-                    ),
                     new Assert\Length(
                         [
                             'groups' => ['user-default'],
@@ -77,54 +81,54 @@ class EditType extends AbstractType
                     ),
                 ],
             ]
-        );
-        $builder->add(
+        )->add(
             'email',
             EmailType::class,
             [
                 'label' => 'label.email',
-                'required' => true,
+                'required' => false,
                 'attr' => [
                     'max_length' => 32,
 
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(),
                     new Assert\Length(
                         [
                             'min' => 8,
                             'max' => 32,
                         ]
                     ),
-                ],
-            ]
-        );
-        $builder->add(
-            'password',
-            PasswordType::class,
-            [
-                'label' => 'label.password',
-                'required' => true,
-                'attr' => [
-                    'max_length' => 32,
-
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(
-                        [
-                            'min' => 8,
-                            'max' => 32,
-                        ]
+                    new CustomAssert\UniqueEmail(
+                        ['groups' => ['user-default'],
+                            'repository' => isset($options['user_repository']) ? $options['user_repository'] : null,
+                            'email' => isset($options['data']['email']) ? $options['data']['email'] : null,]
                     ),
                 ],
             ]
         );
     }
 
+    /**
+     * Options configuration
+     *
+     * @param OptionsResolver $resolver Options Resolver
+     *
+     * @return none
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(
+            [
+                'validation_groups' => 'user-default',
+                'user_repository' => null,
+            ]
+        );
+    }
 
     /**
-     * {@inheritdoc}
+     * Get prefix
+     *
+     * @return null|string
      */
     public function getBlockPrefix()
     {

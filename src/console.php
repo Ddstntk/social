@@ -1,4 +1,14 @@
 <?php
+/**
+ * Console.php
+ *
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
+ */
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;

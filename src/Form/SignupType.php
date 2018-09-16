@@ -2,32 +2,46 @@
 /**
  * Signup type.
  *
- * @category  Social Media
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Validator\Constraints as CustomAssert;
 
 
 /**
- * Class SignupType.
+ * Class SignupType
+ *
+ * @category  Social_Network
+ * @package   Form
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class SignupType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * Form builder
+     *
+     * @param FormBuilderInterface $builder Form builder
+     * @param array                $options Form options
+     *
+     * @return none
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -95,13 +109,23 @@ class SignupType extends AbstractType
                             'max' => 32,
                         ]
                     ),
+                    new CustomAssert\UniqueEmail(
+                        ['groups' => ['user-default'],
+                            'repository' => isset($options['user_repository']) ? $options['user_repository'] : null,
+                            'email' => isset($options['data']['email']) ? $options['data']['email'] : null,]
+                    ),
                 ],
             ]
         );
         $builder->add(
             'password',
-            PasswordType::class,
+            RepeatedType::class,
             [
+                'type' => PasswordType::class,
+                'first_options'  => array('label' => 'label.password'),
+                'second_options' => array('label' => 'label.repeat.password'),
+                'invalid_message' => 'Password fields must match',
+                'options' => array('attr' => array('class' => 'password-field')),
                 'label' => 'label.password',
                 'required' => true,
                 'attr' => [
@@ -129,9 +153,10 @@ class SignupType extends AbstractType
         );
     }
 
-
     /**
-     * {@inheritdoc}
+     * Get prefix
+     *
+     * @return null|string
      */
     public function getBlockPrefix()
     {

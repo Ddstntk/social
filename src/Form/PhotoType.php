@@ -2,12 +2,12 @@
 /**
  * Photo type.
  *
- * @category  Social Media
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 
 namespace Form;
@@ -21,11 +21,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class PhotoType.
+ *
+ * @category  Social_Network
+ * @package   Form
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class PhotoType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * Form builder
+     *
+     * @param FormBuilderInterface $builder Form builder
+     * @param array                $options Form options
+     *
+     * @return none
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -56,7 +68,9 @@ class PhotoType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * Get prefix
+     *
+     * @return null|string
      */
     public function getBlockPrefix()
     {

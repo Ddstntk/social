@@ -2,12 +2,12 @@
 /**
  * Comments repository.
  *
- * @category  Social Media
- * @author    Konrad Szewczuk
- * @copyright (c) 2018 Konrad Szewczuk
+ * @category  Social_Network
+ * @package   Social
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
- *
- * Collage project - social network
  */
 namespace Repository;
 
@@ -16,14 +16,21 @@ use Doctrine\DBAL\DBALException;
 use Utils\Paginator;
 
 /**
- * Class CommentsRepository.
+ * Class CommentsRepository
+ *
+ * @category  Social_Network
+ * @package   Repository
+ * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ * @copyright 2018 Konrad Szewczuk
+ * @license   https://opensource.org/licenses/MIT MIT license
+ * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class CommentsRepository
 {
     /**
      * Number of items per page.
      *
-     * const int NUM_ITEMS
+     * Const int NUM_ITEMS
      */
     const NUM_ITEMS = 100;
 
@@ -37,16 +44,17 @@ class CommentsRepository
     /**
      * PostsRepository constructor.
      *
-     * @param \Doctrine\DBAL\Connection $db
+     * @param \Doctrine\DBAL\Connection $db Database connection
      */
     public function __construct(Connection $db)
     {
         $this->db = $db;
     }
+
     /**
-     * Fetch all records.
+     * Fetch all records
      *
-     * @return array Result
+     * @return array
      */
     public function findAll()
     {
@@ -56,13 +64,14 @@ class CommentsRepository
     }
 
     /**
-     * Get records paginated.
+     * Find all paginated
      *
-     * @param int $page Current page number
+     * @param Post $postId Id
+     * @param int  $page   Page
      *
-     * @return array Result
+     * @return array
      */
-    public function findAllPaginated($page = 1, $postId)
+    public function findAllPaginated($postId, $page = 1)
     {
         $queryBuilder = $this->queryAll()
             ->innerJoin('c', 'users', 'u', 'c.FK_idUsers = u.PK_idUsers')
@@ -86,9 +95,9 @@ class CommentsRepository
     }
 
     /**
-     * Count all pages.
+     * Count all pages
      *
-     * @return int Result
+     * @return float|int
      */
     protected function countAllPages()
     {
@@ -110,11 +119,16 @@ class CommentsRepository
     }
 
     /**
-     * Save record.
+     * Save record
      *
-     * @param array $post Post
+     * @param Comment $comment object
+     * @param Post    $id      Id
+     * @param User    $userId  Id
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
+     *
+     * @return nothing
      */
     public function save($comment, $id, $userId)
     {
@@ -139,22 +153,21 @@ class CommentsRepository
     }
 
     /**
-     * Remove record.
+     * Remove record
      *
-     * @param array $post Post
+     * @param Comment $id Id
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
+     * @throws \Doctrine\DBAL\ConnectionException
      *
-     * @return boolean Result
+     * @return nothing
      */
-    public function delete($post)
+    public function delete($id)
     {
         $this->db->beginTransaction();
 
         try {
-            $this->removeLinkedTags($post['id']);
-            $this->db->delete('comments', ['id' => $post['id']]);
-            $this->db->delete('comments', ['id' => $post['id']]);
+            $this->db->delete('comments', ['PK_idComments' => $id]);
             $this->db->commit();
         } catch (DBALException $e) {
             $this->db->rollBack();
