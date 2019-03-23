@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * PHP Version 5.6
  * Custom User Implementation
  *
  * @category  Social_Network
@@ -91,8 +92,15 @@ final class CustomUser implements AdvancedUserInterface
      * @param bool  $credentialsNonExpired Credentials not expired
      * @param bool  $userNonLocked         User non locekd
      */
-    public function __construct($id, $username, $password, array $roles = array(), $enabled = true, $userNonExpired = true, $credentialsNonExpired = true, $userNonLocked = true)
-    {
+    public function __construct($id,
+        $username,
+        $password,
+        array $roles = array(),
+        $enabled = true,
+        $userNonExpired = true,
+        $credentialsNonExpired = true,
+        $userNonLocked = true
+    ) {
         if ('' === $username || null === $username) {
             throw new \InvalidArgumentException('The username cannot be empty.');
         }

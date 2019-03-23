@@ -1,5 +1,6 @@
 <?php
 /**
+ * PHP Version 5.6
  * Signup type.
  *
  * @category  Social_Network
@@ -111,8 +112,14 @@ class SignupType extends AbstractType
                     ),
                     new CustomAssert\UniqueEmail(
                         ['groups' => ['user-default'],
-                            'repository' => isset($options['user_repository']) ? $options['user_repository'] : null,
-                            'email' => isset($options['data']['email']) ? $options['data']['email'] : null,]
+                            'repository' =>
+                                isset($options['user_repository']) ?
+                                    $options['user_repository'] :
+                                    null,
+                            'email' =>
+                                isset($options['data']['email']) ?
+                                    $options['data']['email'] :
+                                    null,]
                     ),
                 ],
             ]

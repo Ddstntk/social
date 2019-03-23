@@ -1,5 +1,6 @@
 <?php
 /**
+ * PHP Version 5.6
  * Admin controller.
  *
  * @category  Social_Network
@@ -64,7 +65,8 @@ class AuthController implements ControllerProviderInterface
     public function loginAction(Application $app, Request $request)
     {
         $user = ['email' => $app['session']->get('_security.last_username')];
-        $form = $app['form.factory']->createBuilder(LoginType::class, $user)->getForm();
+        $form = $app['form.factory']
+            ->createBuilder(LoginType::class, $user)->getForm();
         $app['session']->set('userid', $user);
         return $app['twig']->render(
             'auth/login.html.twig',
@@ -100,8 +102,10 @@ class AuthController implements ControllerProviderInterface
 
             $user = $form->getData();
             $password = $user['password'];
-            $user['password'] = $app['security.encoder.bcrypt']->encodePassword($password, '');
+            $user['password'] = $app['security.encoder.bcrypt']
+                                ->encodePassword($password, '');
             $user['role_id'] = 2;
+            $user['photo'] = 'default.jpg';
             $userRepository->save($user);
 
             $app['session']->getFlashBag()->add(
@@ -112,7 +116,10 @@ class AuthController implements ControllerProviderInterface
                 ]
             );
 
-            return $app->redirect($app['url_generator']->generate('posts_index_paginated'), 301);
+            return $app->redirect(
+                $app['url_generator']
+                ->generate('posts_index_paginated'), 301
+            );
         }
 
 

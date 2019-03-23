@@ -1,5 +1,6 @@
 <?php
 /**
+ * PHP Version 5.6
  * User controller.
  *
  * @category  Social_Network
@@ -46,9 +47,12 @@ class UserController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        $controller->get('/profile', [$this, 'profileAction'])->bind('user_profile');
-        $controller->get('/view/{id}', [$this, 'viewAction'])->bind('user_view');
-        $controller->get('/index', [$this, 'indexAction'])->bind('users_index_paginated');
+        $controller->get('/profile', [$this, 'profileAction'])
+            ->bind('user_profile');
+        $controller->get('/view/{id}', [$this, 'viewAction'])
+            ->bind('user_view');
+        $controller->get('/index', [$this, 'indexAction'])
+            ->bind('users_index_paginated');
         $controller->match('/edit', [$this, 'editAction'])
             ->method('GET|POST')
             ->bind('user_edit');
@@ -129,11 +133,12 @@ class UserController implements ControllerProviderInterface
         $userTmp = [];
         $id = $app['security.token_storage']->getToken()->getUser()->getID();
         $userRepository = new UserRepository($app['db']);
-
+        $userTmp = $userRepository->getUserById($id);
         $form = $app['form.factory']->createBuilder(
             EditType::class,
             $user,
-            ['user_repository' => new UserRepository($app['db'])]
+            [   'placeholders' => $userTmp,
+                'user_repository' => new UserRepository($app['db'])]
         )->getForm();
         $form->handleRequest($request);
 
@@ -161,7 +166,10 @@ class UserController implements ControllerProviderInterface
                 );
             }
 
-            return $app->redirect($app['url_generator']->generate('user_profile'), 301);
+            return $app->redirect(
+                $app['url_generator']
+                ->generate('user_profile'), 301
+            );
         }
 
 
@@ -200,7 +208,8 @@ class UserController implements ControllerProviderInterface
             $user = $form->getData();
 
             $password = $user['password'];
-            $user['password'] = $app['security.encoder.bcrypt']->encodePassword($password, '');
+            $user['password'] = $app['security.encoder.bcrypt']
+                                ->encodePassword($password, '');
             $user['PK_idUsers'] = $id;
             if (sizeof($user)) {
                 $userRepository->save($user);

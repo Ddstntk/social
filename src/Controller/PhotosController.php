@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Photos controller.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Controller;
@@ -22,10 +26,13 @@ use Symfony\Component\HttpFoundation\Request;
  * Class PhotosController
  *
  * @category  Social_Network
- * @package   Controller
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class PhotosController implements ControllerProviderInterface
@@ -40,11 +47,9 @@ class PhotosController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        //        $controller->get('/add', [$this, 'addAction'])->bind('photo_add');
         $controller->match('/add', [$this, 'addAction'])
             ->method('POST|GET')
             ->bind('photo_add');
-        //        $controller->get('/add', [$this, 'addAction'])->bind('photo_add');
 
 
         return $controller;
@@ -61,7 +66,8 @@ class PhotosController implements ControllerProviderInterface
     {
         $photo = [];
 
-        $form = $app['form.factory']->createBuilder(PhotoType::class, $photo)->getForm();
+        $form = $app['form.factory']->createBuilder(PhotoType::class, $photo)
+                                            ->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -70,7 +76,7 @@ class PhotosController implements ControllerProviderInterface
             $photo  = $form->getData();
             $fileUploader = new FileUploader($app['config.photos_directory']);
             $fileName = $fileUploader->upload($photo['photo']);
-            $photo['photo']=$fileName;
+            $photo['photo'] = $fileName;
             $photosRepository = new PhotosRepository($app['db']);
             $photosRepository->save($photo, $userId);
 

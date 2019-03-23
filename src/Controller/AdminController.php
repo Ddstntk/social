@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Admin controller.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Controller;
@@ -30,10 +34,13 @@ use Symfony\Component\Security\Core\User\User;
  * Class AdminController.
  *
  * @category  Social_Network
- * @package   Controller
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class AdminController implements ControllerProviderInterface
@@ -73,6 +80,7 @@ class AdminController implements ControllerProviderInterface
         $controller->match('/comments/{id}/delete', [$this, 'deleteComments'])
             ->method('POST|GET')
             ->bind('admin_comments_delete');
+
         return $controller;
     }
 
@@ -101,6 +109,7 @@ class AdminController implements ControllerProviderInterface
     public function manageUsers(Application $app)
     {
         $userRepository = new UserRepository($app['db']);
+
         return $app['twig']->render(
             'user/index_simple.html.twig',
             ['users' => $userRepository->findAll()]
@@ -133,7 +142,6 @@ class AdminController implements ControllerProviderInterface
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && !empty($form)) {
-
             $userTmp = $form->getData();
 
 
@@ -157,10 +165,11 @@ class AdminController implements ControllerProviderInterface
                 );
             }
         }
+
         return $app['twig']->render(
             'user/admin_view.html.twig',
             ['user' => $userRepository->getUserById($id),
-                'form' => $form->createView(),]
+                'form' => $form->createView(), ]
         );
     }
 
@@ -169,17 +178,17 @@ class AdminController implements ControllerProviderInterface
      *
      * @param Application $app Application
      * @param User        $id  Id
-     * 
+     *
      * @return mixed User
      */
     public function confirmUser(Application $app, $id)
     {
         $userRepository = new UserRepository($app['db']);
+
         return $app['twig']->render(
             'user/admin_confirm.html.twig',
             ['user' => $userRepository->getUserById($id)]
         );
-
     }
     /**
      * Delete user action
@@ -202,22 +211,20 @@ class AdminController implements ControllerProviderInterface
                     'messages',
                     ['type' => 'warning', 'message' => 'message.user_not_found']
                 );
-
-            return $app->redirect($app['url_generator']->generate('homepage'));
         } else {
             $userRepository->delete($id);
             $app['session']->getFlashBag()
-                ->add(
-                    'messages',
-                    ['type' => 'success', 'message' => 'message.user_successfully_deleted']
-                );
+            ->add(
+                'messages',
+                ['type' => 'success',
+                    'message' => 'message.user_successfully_deleted', ]
+            );
+        }
 
             return $app['twig']->render(
                 'user/index_simple.html.twig',
                 ['users' => $userRepository->findAll()]
             );
-        }
-
     }
 
 
@@ -231,6 +238,7 @@ class AdminController implements ControllerProviderInterface
     public function managePosts(Application $app)
     {
         $postRepository = new PostsRepository($app['db']);
+
         return $app['twig']->render(
             'posts/index_simple.html.twig',
             ['posts' => $postRepository->findAll()]
@@ -251,6 +259,7 @@ class AdminController implements ControllerProviderInterface
     {
         $postRepository = new PostsRepository($app['db']);
         $postRepository->delete($id);
+
         return $app['twig']->render(
             'posts/index_simple.html.twig',
             ['posts' => $postRepository->findAll()]
@@ -301,6 +310,4 @@ class AdminController implements ControllerProviderInterface
             ['posts' => $postRepository->findAll()]
         );
     }
-
-
 }

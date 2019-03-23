@@ -1,16 +1,19 @@
 <?php
 /**
+ * PHP Version 5.6
  * Edit type.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Form;
-
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -25,10 +28,13 @@ use Validator\Constraints as CustomAssert;
  * Class EditType
  *
  * @category  Social_Network
- * @package   Form
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class EditType extends AbstractType
@@ -51,6 +57,7 @@ class EditType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'max_length' => 45,
+                    'placeholder' => $options['placeholders']['name'],
                 ],
                 'constraints' => [
                     new Assert\Length(
@@ -70,6 +77,7 @@ class EditType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'max_length' => 45,
+                    'placeholder' => $options['placeholders']['surname'],
                 ],
                 'constraints' => [
                     new Assert\Length(
@@ -89,7 +97,7 @@ class EditType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'max_length' => 32,
-
+                    'placeholder' => $options['placeholders']['email'],
                 ],
                 'constraints' => [
                     new Assert\Length(
@@ -100,8 +108,14 @@ class EditType extends AbstractType
                     ),
                     new CustomAssert\UniqueEmail(
                         ['groups' => ['user-default'],
-                            'repository' => isset($options['user_repository']) ? $options['user_repository'] : null,
-                            'email' => isset($options['data']['email']) ? $options['data']['email'] : null,]
+                            'repository' =>
+                                isset($options['user_repository']) ?
+                                    $options['user_repository'] :
+                                    null,
+                            'email' =>
+                                isset($options['data']['email']) ?
+                                    $options['data']['email'] :
+                                    null, ]
                     ),
                 ],
             ]
@@ -119,6 +133,7 @@ class EditType extends AbstractType
     {
         $resolver->setDefaults(
             [
+                'placeholders' => null,
                 'validation_groups' => 'user-default',
                 'user_repository' => null,
             ]

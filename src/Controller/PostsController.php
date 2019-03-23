@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Posts controller.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Controller;
@@ -23,10 +27,13 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
  * Class PostsController.
  *
  * @category  Social_Network
- * @package   Controller
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class PostsController implements ControllerProviderInterface
@@ -89,8 +96,9 @@ class PostsController implements ControllerProviderInterface
      *
      * @param Application $app     Application
      * @param Request     $request HttpRequest
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function addAction(Application $app, Request $request)

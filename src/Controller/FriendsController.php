@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Friends controller.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Controller;
@@ -19,14 +23,18 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Repository\FriendsRepository;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
  * Class FriendsController.
  *
  * @category  Social_Network
- * @package   Controller
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class FriendsController implements ControllerProviderInterface
@@ -41,14 +49,19 @@ class FriendsController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        $controller->get('/invite/{friendId}', [$this, 'inviteAction'])->bind('friend_invite');
-        $controller->get('/add/{friendId}', [$this, 'addFriend'])->bind('friend_add');
-        $controller->get('/index', [$this, 'indexAction'])->bind('friends_index_paginated');
-        $controller->get('/invites', [$this, 'indexInvites'])->bind('invites_index_paginated');
+        $controller->get('/invite/{friendId}', [$this, 'inviteAction'])
+            ->bind('friend_invite');
+        $controller->get('/add/{friendId}', [$this, 'addFriend'])
+            ->bind('friend_add');
+        $controller->get('/index', [$this, 'indexAction'])
+            ->bind('friends_index_paginated');
+        $controller->get('/invites', [$this, 'indexInvites'])
+            ->bind('invites_index_paginated');
         $controller->match('/{id}/delete', [$this, 'deleteAction'])
             ->method('GET|POST')
             ->assert('id', '[1-9]\d*')
             ->bind('friends_delete');
+
         return $controller;
     }
 
@@ -60,6 +73,7 @@ class FriendsController implements ControllerProviderInterface
      * @param int         $page     Page
      *
      * @return mixed
+     *
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -67,16 +81,20 @@ class FriendsController implements ControllerProviderInterface
     {
         $friendsRepository = new FriendsRepository($app['db']);
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+        $areInvited = $friendsRepository->areInvited($userId, $friendId);
+        var_dump($areInvited);
+        if (!$areInvited) {
+            $friendsRepository -> invite($userId, $friendId);
 
-        $friendsRepository -> invite($userId, $friendId);
+            $app['session']->getFlashBag()->add(
+                'messages',
+                [
+                    'type' => 'success',
+                    'message' => 'message.user_invited',
+                ]
+            );
+        }
 
-        $app['session']->getFlashBag()->add(
-            'messages',
-            [
-                'type' => 'success',
-                'message' => 'message.user_invited',
-            ]
-        );
         return $app['twig']->render(
             'friends/index.html.twig',
             ['paginator' => $friendsRepository->findAllPaginated($userId, $page)]
@@ -91,6 +109,7 @@ class FriendsController implements ControllerProviderInterface
      * @param int         $page     Page
      *
      * @return mixed
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function addFriend(Application $app, $friendId, $page = 1)
@@ -119,6 +138,7 @@ class FriendsController implements ControllerProviderInterface
 
         $friendsRepository = new FriendsRepository($app['db']);
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+
         return $app['twig']->render(
             'friends/index.html.twig',
             ['paginator' => $friendsRepository->findAllPaginated($userId, $page)]
@@ -137,9 +157,11 @@ class FriendsController implements ControllerProviderInterface
     {
         $friendsRepository = new FriendsRepository($app['db']);
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+
         return $app['twig']->render(
             'friends/invites.html.twig',
-            ['paginator' => $friendsRepository->findAllInvitesPaginated($userId, $page)]
+            ['paginator' => $friendsRepository
+                ->findAllInvitesPaginated($userId, $page), ]
         );
     }
 
@@ -150,6 +172,7 @@ class FriendsController implements ControllerProviderInterface
      * @param Friend      $id  Id
      *
      * @return mixed
+     *
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -170,7 +193,7 @@ class FriendsController implements ControllerProviderInterface
      *
      * @param Application $app     Application
      * @param Request     $request Request
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editAction(Application $app, Request $request)
@@ -202,7 +225,11 @@ class FriendsController implements ControllerProviderInterface
                 ]
             );
 
-            return $app->redirect($app['url_generator']->generate('user_profile'), 301);
+            return $app->redirect(
+                $app['url_generator']
+                ->generate('user_profile'),
+                301
+            );
         }
 
 

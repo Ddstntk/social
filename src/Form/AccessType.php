@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Access type.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Form;
@@ -23,10 +27,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class AccessType.
  *
  * @category  Social_Network
- * @package   Form
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class AccessType extends AbstractType
@@ -44,15 +51,16 @@ class AccessType extends AbstractType
     {
         $builder->add(
             'role_id',
-            ChoiceType::class, array(
+            ChoiceType::class,
+            array(
                     'required' => false,
                     'label' => 'label.access',
                     'label_attr' => array('style' => 'white-space: nowrap;'),
                     'placeholder' => 'choose.label',
                     'choices'  => array(
                         'label.admin' => 1,
-                        'label.user'=> 2,
-                    )
+                        'label.user' => 2,
+                    ),
                 )
         )
             ->add(

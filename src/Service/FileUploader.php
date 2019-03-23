@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * File Uploader service.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Service;
@@ -17,10 +21,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * Class FileUploader.
  *
  * @category  Social_Network
- * @package   Service
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class FileUploader

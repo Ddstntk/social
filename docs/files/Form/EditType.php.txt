@@ -1,5 +1,6 @@
 <?php
 /**
+ * PHP Version 5.6
  * Edit type.
  *
  * @category  Social_Network
@@ -51,6 +52,7 @@ class EditType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'max_length' => 45,
+                    'placeholder' => $options['placeholders']['name'],
                 ],
                 'constraints' => [
                     new Assert\Length(
@@ -70,6 +72,7 @@ class EditType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'max_length' => 45,
+                    'placeholder' => $options['placeholders']['surname'],
                 ],
                 'constraints' => [
                     new Assert\Length(
@@ -89,7 +92,7 @@ class EditType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'max_length' => 32,
-
+                    'placeholder' => $options['placeholders']['email'],
                 ],
                 'constraints' => [
                     new Assert\Length(
@@ -100,8 +103,14 @@ class EditType extends AbstractType
                     ),
                     new CustomAssert\UniqueEmail(
                         ['groups' => ['user-default'],
-                            'repository' => isset($options['user_repository']) ? $options['user_repository'] : null,
-                            'email' => isset($options['data']['email']) ? $options['data']['email'] : null,]
+                            'repository' =>
+                                isset($options['user_repository']) ?
+                                    $options['user_repository'] :
+                                    null,
+                            'email' =>
+                                isset($options['data']['email']) ?
+                                    $options['data']['email'] :
+                                    null,]
                     ),
                 ],
             ]
@@ -119,6 +128,7 @@ class EditType extends AbstractType
     {
         $resolver->setDefaults(
             [
+                'placeholders' => null,
                 'validation_groups' => 'user-default',
                 'user_repository' => null,
             ]

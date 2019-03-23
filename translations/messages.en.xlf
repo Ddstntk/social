@@ -51,7 +51,11 @@
                 <target>Next page</target>
             </trans-unit>
             <trans-unit id="label.nav.prev">
-                <source>label.nav.next</source>
+                <source>label.nav.prev</source>
+                <target>Previous page</target>
+            </trans-unit>
+            <trans-unit id="labels.nav.prev">
+                <source>labels.nav.prev</source>
                 <target>Previous page</target>
             </trans-unit>
             <trans-unit id="label.content">
@@ -313,6 +317,22 @@
             <trans-unit id='message.user_invited'>
                 <source>message.user_invited</source>
                 <target>Invitation sent</target>
+            </trans-unit>
+            <trans-unit id='admin.user.confirm.label'>
+                <source>admin.user.confirm.label</source>
+                <target>Delete user</target>
+            </trans-unit>
+            <trans-unit id='message.email.exists'>
+                <source>message.email.exists</source>
+                <target>Email is taken</target>
+            </trans-unit>
+            <trans-unit id='yes'>
+                <source>yes</source>
+                <target>Yes</target>
+            </trans-unit>
+            <trans-unit id='no'>
+                <source>no</source>
+                <target>No</target>
             </trans-unit>
         </body>
     </file>

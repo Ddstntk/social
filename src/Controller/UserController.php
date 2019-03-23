@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * User controller.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Controller;
@@ -28,10 +32,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Class UserController
  *
  * @category  Social_Network
- * @package   Controller
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class UserController implements ControllerProviderInterface
@@ -46,15 +53,19 @@ class UserController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        $controller->get('/profile', [$this, 'profileAction'])->bind('user_profile');
-        $controller->get('/view/{id}', [$this, 'viewAction'])->bind('user_view');
-        $controller->get('/index', [$this, 'indexAction'])->bind('users_index_paginated');
+        $controller->get('/profile', [$this, 'profileAction'])
+            ->bind('user_profile');
+        $controller->get('/view/{id}', [$this, 'viewAction'])
+            ->bind('user_view');
+        $controller->get('/index', [$this, 'indexAction'])
+            ->bind('users_index_paginated');
         $controller->match('/edit', [$this, 'editAction'])
             ->method('GET|POST')
             ->bind('user_edit');
         $controller->match('/password', [$this, 'changePassword'])
             ->method('GET|POST')
             ->bind('password_change');
+
         return $controller;
     }
 
@@ -71,6 +82,7 @@ class UserController implements ControllerProviderInterface
         $userRepository = new UserRepository($app['db']);
         $friendsRepository = new FriendsRepository($app['db']);
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+
         return $app['twig']->render(
             'user/index.html.twig',
             ['paginator' => $userRepository->findAllPaginated($friendsRepository, $userId, $page)]
@@ -88,6 +100,7 @@ class UserController implements ControllerProviderInterface
     public function viewAction(Application $app, $id)
     {
         $userRepository = new UserRepository($app['db']);
+
         return $app['twig']->render(
             'user/view.html.twig',
             ['user' => $userRepository->getUserById($id)]
@@ -107,6 +120,7 @@ class UserController implements ControllerProviderInterface
 
         $id = $app['security.token_storage']->getToken()->getUser()->getID();
         var_dump($id);
+
         return $app['twig']->render(
             'user/view.html.twig',
             ['user' => $userRepository->getUserById($id)]
@@ -120,6 +134,7 @@ class UserController implements ControllerProviderInterface
      * @param Request     $request HttpRequest
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -129,16 +144,16 @@ class UserController implements ControllerProviderInterface
         $userTmp = [];
         $id = $app['security.token_storage']->getToken()->getUser()->getID();
         $userRepository = new UserRepository($app['db']);
-
+        $userTmp = $userRepository->getUserById($id);
         $form = $app['form.factory']->createBuilder(
             EditType::class,
             $user,
-            ['user_repository' => new UserRepository($app['db'])]
+            [   'placeholders' => $userTmp,
+                'user_repository' => new UserRepository($app['db']), ]
         )->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && !empty($form)) {
-
             $userTmp = $form->getData();
 
 
@@ -161,7 +176,11 @@ class UserController implements ControllerProviderInterface
                 );
             }
 
-            return $app->redirect($app['url_generator']->generate('user_profile'), 301);
+            return $app->redirect(
+                $app['url_generator']
+                ->generate('user_profile'),
+                301
+            );
         }
 
 
@@ -176,8 +195,9 @@ class UserController implements ControllerProviderInterface
      *
      * @param Application $app     Application
      * @param Request     $request HttpRequest
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -196,11 +216,11 @@ class UserController implements ControllerProviderInterface
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && !empty($form)) {
-
             $user = $form->getData();
 
             $password = $user['password'];
-            $user['password'] = $app['security.encoder.bcrypt']->encodePassword($password, '');
+            $user['password'] = $app['security.encoder.bcrypt']
+                                ->encodePassword($password, '');
             $user['PK_idUsers'] = $id;
             if (sizeof($user)) {
                 $userRepository->save($user);

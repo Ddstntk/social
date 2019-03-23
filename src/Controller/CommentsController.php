@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Comments controller.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 
@@ -25,10 +29,13 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
  * Class PostsController.
  *
  * @category  Social_Network
- * @package   Controller
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class CommentsController implements ControllerProviderInterface
@@ -50,6 +57,7 @@ class CommentsController implements ControllerProviderInterface
         $controller->match('/add', [$this, 'addAction'])
             ->method('POST|GET')
             ->bind('comments_add');
+
         return $controller;
     }
 
@@ -80,7 +88,7 @@ class CommentsController implements ControllerProviderInterface
                 'paginator' => $commentsRepository->findAllPaginated($postId, $page),
                 'xd' => $postsRepository->findOneById($postId),
                 'post' => $post,
-                'form' => $form->createView()]
+                'form' => $form->createView(), ]
         );
     }
 
@@ -89,13 +97,14 @@ class CommentsController implements ControllerProviderInterface
      * Add comment action
      *
      * @param Application $app     Application
-     * @param int         $page    Page
      * @param Request     $request Request
+     * @param int         $page    Page
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function addAction(Application $app, $page = 1, Request $request)
+    public function addAction(Application $app, Request $request, $page = 1)
     {
         $post = [];
         $form = $app['form.factory']->createBuilder(
@@ -108,7 +117,7 @@ class CommentsController implements ControllerProviderInterface
         var_dump($x);
 
         if (preg_match("/\/(\d+)$/", $x, $matches)) {
-            $id=$matches[1];
+            $id = $matches[1];
         }
         if ($form->isSubmitted() && $form->isValid()) {
             $postsRepository = new CommentsRepository($app['db']);
@@ -122,8 +131,14 @@ class CommentsController implements ControllerProviderInterface
                 ]
             );
 
-            return $app->redirect($app['url_generator']->generate('comments_index_paginated', array("postId"=> $id)), 301);
+            return $app->redirect(
+                $app['url_generator']
+                ->generate(
+                    'comments_index_paginated',
+                    array("postId" => $id)
+                ),
+                301
+            );
         }
     }
-
 }

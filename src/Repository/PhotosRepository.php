@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * PhotosRepository
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Repository;
@@ -19,10 +23,13 @@ use Utils\Paginator;
  * Class PhotosRepository
  *
  * @category  Social_Network
- * @package   Repository
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class PhotosRepository
@@ -56,14 +63,14 @@ class PhotosRepository
      *
      * @param Photo $photo  object
      * @param User  $userId Id
-     * 
+     *
      * @return int
      */
     public function save($photo, $userId)
     {
             unset($photo['id']);
             var_dump($photo);
-            return $this->db->update('users', $photo, ['PK_idUsers' => $userId]);
 
+            return $this->db->update('users', $photo, ['PK_idUsers' => $userId]);
     }
 }

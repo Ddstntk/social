@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Posts repository.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Repository;
@@ -20,10 +24,13 @@ use Repository\FriendsRepository;
  * Class PostsRepository
  *
  * @category  Social_Network
- * @package   Repository
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class PostsRepository
@@ -74,7 +81,9 @@ class PostsRepository
      */
     public function findAllPaginated($userId, $page = 1)
     {
-        $queryBuilder = $this->queryAll()->leftJoin('p', 'friends', 'f', 'f.FK_idUserA = p.FK_idUsers')
+        $queryBuilder = $this
+            ->queryAll()
+            ->leftJoin('p', 'friends', 'f', 'f.FK_idUserA = p.FK_idUsers')
             ->where('p.visibility = 1')
             ->orWhere('f.FK_idUserB = :userId')
             ->orWhere('p.FK_idUsers = :userId')
@@ -112,29 +121,6 @@ class PostsRepository
         return !$result ? [] : $result;
     }
 
-    /**
-     * Count all pages
-     *
-     * @return float|int
-     */
-    protected function countAllPages()
-    {
-        $pagesNumber = 1;
-
-        $queryBuilder = $this->queryAll();
-        $queryBuilder->select('COUNT(DISTINCT p.PK_idPosts) AS total_results')
-            ->setMaxResults(1);
-
-        $result = $queryBuilder->execute()->fetch();
-
-        if ($result) {
-            $pagesNumber =  ceil($result['total_results'] / static::NUM_ITEMS);
-        } else {
-            $pagesNumber = 1;
-        }
-
-        return $pagesNumber;
-    }
 
     /**
      * Save record
@@ -207,6 +193,30 @@ class PostsRepository
             $this->db->rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * Count all pages
+     *
+     * @return float|int
+     */
+    protected function countAllPages()
+    {
+        $pagesNumber = 1;
+
+        $queryBuilder = $this->queryAll();
+        $queryBuilder->select('COUNT(DISTINCT p.PK_idPosts) AS total_results')
+            ->setMaxResults(1);
+
+        $result = $queryBuilder->execute()->fetch();
+
+        if ($result) {
+            $pagesNumber =  ceil($result['total_results'] / static::NUM_ITEMS);
+        } else {
+            $pagesNumber = 1;
+        }
+
+        return $pagesNumber;
     }
 
     /**

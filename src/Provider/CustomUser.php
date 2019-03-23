@@ -1,18 +1,21 @@
 <?php
 
 /**
+ * PHP Version 5.6
  * Custom User Implementation
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 
 namespace Provider;
-
 
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -21,10 +24,13 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * Class CustomUser
  *
  * @category  Social_Network
- * @package   Provider
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 final class CustomUser implements AdvancedUserInterface
@@ -35,49 +41,49 @@ final class CustomUser implements AdvancedUserInterface
      *
      * @var
      */
-    private $_id;
+    private $id;
     /**
      * Logged user username
      *
      * @var
      */
-    private $_username;
+    private $username;
     /**
      * Logged user password
      *
      * @var
      */
-    private $_password;
+    private $password;
     /**
      * User status
      *
      * @var bool
      */
-    private $_enabled;
+    private $enabled;
     /**
      * Account status
      *
      * @var bool
      */
-    private $_accountNonExpired;
+    private $accountNonExpired;
     /**
      * Credentials status
      *
      * @var bool
      */
-    private $_credentialsNonExpired;
+    private $credentialsNonExpired;
     /**
      * Account lock status
      *
      * @var bool
      */
-    private $_accountNonLocked;
+    private $accountNonLocked;
     /**
      * Logged user roles
      *
      * @var array
      */
-    private $_roles;
+    private $roles;
 
     /**
      * CustomUser constructor.
@@ -97,14 +103,14 @@ final class CustomUser implements AdvancedUserInterface
             throw new \InvalidArgumentException('The username cannot be empty.');
         }
 
-        $this->_id = $id;
-        $this->_username = $username;
-        $this->_password = $password;
-        $this->_enabled = $enabled;
-        $this->_accountNonExpired = $userNonExpired;
-        $this->_credentialsNonExpired = $credentialsNonExpired;
-        $this->_accountNonLocked = $userNonLocked;
-        $this->_roles = $roles;
+        $this->id = $id;
+        $this->username = $username;
+        $this->password = $password;
+        $this->enabled = $enabled;
+        $this->accountNonExpired = $userNonExpired;
+        $this->credentialsNonExpired = $credentialsNonExpired;
+        $this->accountNonLocked = $userNonLocked;
+        $this->roles = $roles;
     }
 
     /**
@@ -124,7 +130,7 @@ final class CustomUser implements AdvancedUserInterface
      */
     public function getId()
     {
-        return $this->_id;
+        return $this->id;
     }
 
     /**
@@ -134,7 +140,7 @@ final class CustomUser implements AdvancedUserInterface
      */
     public function getRoles()
     {
-        return $this->_roles;
+        return $this->roles;
     }
 
     /**
@@ -144,7 +150,7 @@ final class CustomUser implements AdvancedUserInterface
      */
     public function getPassword()
     {
-        return $this->_password;
+        return $this->password;
     }
 
     /**
@@ -163,7 +169,7 @@ final class CustomUser implements AdvancedUserInterface
      */
     public function getUsername()
     {
-        return $this->_username;
+        return $this->username;
     }
 
     /**
@@ -173,7 +179,7 @@ final class CustomUser implements AdvancedUserInterface
      */
     public function isAccountNonExpired()
     {
-        return $this->_accountNonExpired;
+        return $this->accountNonExpired;
     }
 
     /**
@@ -183,7 +189,7 @@ final class CustomUser implements AdvancedUserInterface
      */
     public function isAccountNonLocked()
     {
-        return $this->_accountNonLocked;
+        return $this->accountNonLocked;
     }
 
     /**
@@ -193,7 +199,7 @@ final class CustomUser implements AdvancedUserInterface
      */
     public function isCredentialsNonExpired()
     {
-        return $this->_credentialsNonExpired;
+        return $this->credentialsNonExpired;
     }
 
     /**
@@ -203,7 +209,7 @@ final class CustomUser implements AdvancedUserInterface
      */
     public function isEnabled()
     {
-        return $this->_enabled;
+        return $this->enabled;
     }
 
     /**

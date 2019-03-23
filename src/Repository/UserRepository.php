@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * User repository
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Repository;
@@ -21,10 +25,13 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * Class UserRepository
  *
  * @category  Social_Network
- * @package   Repository
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class UserRepository
@@ -200,14 +207,17 @@ class UserRepository
     {
         $this->db->beginTransaction();
 
-        try{
-            if (isset($user['PK_idUsers']) && ctype_digit((string) $user['PK_idUsers'])) {
+        try {
+            if (isset($user['PK_idUsers'])
+                && ctype_digit((string) $user['PK_idUsers'])
+            ) {
                 // update record
                 $userId = $user['PK_idUsers'];
                 unset($user['PK_idUsers']);
-                $this->db->update('users', $user, ['PK_idUsers' => $userId]);
-                $this->db->commit();
-
+                $this->db
+                    ->update('users', $user, ['PK_idUsers' => $userId]);
+                $this->db
+                    ->commit();
             } else {
                 // add new user
                 $user['birthDate'] = $user['birthDate'] ->format('Y-m-d');
@@ -253,7 +263,11 @@ class UserRepository
             ->setMaxResults(1);
 
 
-        $paginator = new Paginator($this->findStrangers($friendsRepository, $userId), $countQueryBuilder);
+        $paginator = new Paginator(
+            $this
+            ->findStrangers($friendsRepository, $userId),
+            $countQueryBuilder
+        );
         $paginator->setCurrentPage($page);
         $paginator->setMaxPerPage(100);
 
@@ -342,8 +356,6 @@ class UserRepository
             ->where('PK_idUsers = '.$id)
             ->execute();
         $this->db->commit();
-
-
     }
 
     /**
@@ -371,7 +383,7 @@ class UserRepository
      *
      * @param Repository $friendsRepository Friends
      * @param User       $userId            Id
-     * 
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     protected function findStrangers($friendsRepository, $userId)
@@ -392,7 +404,6 @@ class UserRepository
             ->where($queryBuilder -> expr()->notIn('k.PK_idUsers', $friends))
             ->andWhere('k.PK_idUsers <> :userId')
             ->setParameters(array(':userId' => $userId, ':friendId' => 1));
-
     }
 
     /**
@@ -415,5 +426,4 @@ class UserRepository
         )
             ->from('users', 'u');
     }
-
 }

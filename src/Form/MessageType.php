@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Message type.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Form;
@@ -16,15 +20,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Validator\Constraints as CustomAssert;
 
 /**
  * Class MessageType
  *
  * @category  Social_Network
- * @package   Form
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class MessageType extends AbstractType
@@ -44,18 +52,13 @@ class MessageType extends AbstractType
 
             'content',
             TextareaType::class,
-            array(
-                'label' => false,
-                'attr' => array(
-                    'style' => 'height:55%; width:100%; resize: none',
-                'rows'=> 3,
-                ),
-            ),
             [
+                'label' => false,
+                'attr' => [
+                    'style' => 'height:55%; width:100%; resize: none',
+                    'rows' => 3,
+                ],
                 'required' => true,
-                'attr' => array(
-            //                    'style' => 'height: 10%; width: 100%;'
-                ),
                 'constraints' => [
                     new Assert\NotBlank(
                         ['groups' => ['message-default']]
@@ -67,7 +70,19 @@ class MessageType extends AbstractType
                             'max' => 1000,
                         ]
                     ),
+                    new CustomAssert\UniqueEmail(
+                        ['groups' => ['message-default'],
+                            'repository' =>
+                                isset($options['chat_repository']) ?
+                                    $options['chat_repository'] :
+                                    null,
+                            'email' =>
+                                isset($options['data']['id']) ?
+                                    $options['data']['id'] :
+                                    null, ]
+                    ),
                 ],
+
             ]
         );
     }
@@ -84,6 +99,7 @@ class MessageType extends AbstractType
         $resolver->setDefaults(
             [
                 'validation_groups' => 'message-default',
+                'user_repository' => null,
             ]
         );
     }

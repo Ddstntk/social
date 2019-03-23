@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * DBAL paginator.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 
@@ -18,10 +22,13 @@ use Doctrine\DBAL\Query\QueryBuilder;
  * Class Paginator.
  *
  * @category  Social_Network
- * @package   Utils
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class Paginator
@@ -75,7 +82,7 @@ class Paginator
      */
     public function setCurrentPage($currentPage)
     {
-        $this->currentPage = (integer) ((ctype_digit((string) $currentPage) && $currentPage > 0) ? $currentPage : 1);
+        $this->currentPage = (int) ((ctype_digit((string) $currentPage) && $currentPage > 0) ? $currentPage : 1);
     }
 
     /**
@@ -87,7 +94,7 @@ class Paginator
      */
     public function setMaxPerPage($maxPerPage)
     {
-        $this->maxPerPage = (integer) ((ctype_digit((string) $maxPerPage) && $maxPerPage > 0) ? $maxPerPage : 1);
+        $this->maxPerPage = (int) ((ctype_digit((string) $maxPerPage) && $maxPerPage > 0) ? $maxPerPage : 1);
     }
 
     /**

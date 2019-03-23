@@ -1,5 +1,6 @@
 <?php
 /**
+ * PHP Version 5.6
  * Admin controller.
  *
  * @category  Social_Network
@@ -209,7 +210,8 @@ class AdminController implements ControllerProviderInterface
             $app['session']->getFlashBag()
                 ->add(
                     'messages',
-                    ['type' => 'success', 'message' => 'message.user_successfully_deleted']
+                    ['type' => 'success',
+                     'message' => 'message.user_successfully_deleted']
                 );
 
             return $app['twig']->render(

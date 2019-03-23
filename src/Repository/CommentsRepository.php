@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Comments repository.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Repository;
@@ -19,10 +23,13 @@ use Utils\Paginator;
  * Class CommentsRepository
  *
  * @category  Social_Network
- * @package   Repository
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class CommentsRepository
@@ -95,30 +102,6 @@ class CommentsRepository
     }
 
     /**
-     * Count all pages
-     *
-     * @return float|int
-     */
-    protected function countAllPages()
-    {
-        $pagesNumber = 1;
-
-        $queryBuilder = $this->queryAll();
-        $queryBuilder->select('COUNT(DISTINCT c.PK_idComments) AS total_results')
-            ->setMaxResults(1);
-
-        $result = $queryBuilder->execute()->fetch();
-
-        if ($result) {
-            $pagesNumber =  ceil($result['total_results'] / static::NUM_ITEMS);
-        } else {
-            $pagesNumber = 1;
-        }
-
-        return $pagesNumber;
-    }
-
-    /**
      * Save record
      *
      * @param Comment $comment object
@@ -174,6 +157,32 @@ class CommentsRepository
             throw $e;
         }
     }
+
+
+    /**
+     * Count all pages
+     *
+     * @return float|int
+     */
+    protected function countAllPages()
+    {
+        $pagesNumber = 1;
+
+        $queryBuilder = $this->queryAll();
+        $queryBuilder->select('COUNT(DISTINCT c.PK_idComments) AS total_results')
+            ->setMaxResults(1);
+
+        $result = $queryBuilder->execute()->fetch();
+
+        if ($result) {
+            $pagesNumber =  ceil($result['total_results'] / static::NUM_ITEMS);
+        } else {
+            $pagesNumber = 1;
+        }
+
+        return $pagesNumber;
+    }
+
 
     /**
      * Query all records.

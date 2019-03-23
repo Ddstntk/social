@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * PHP Version 5.6
  * App.php
  *
  * @category  Social_Network
@@ -53,8 +54,14 @@ $app['config.download_photos_directory'] = '/uploads/photos';
 $app['twig'] = $app->extend(
     'twig', function ($twig, $app) {
         // add custom globals, filters, tags, ...
-        $twig->addGlobal('photos_directory', $app['config.photos_directory']);
-        $twig->addGlobal('download_photos_directory', $app['config.download_photos_directory']);
+        $twig->addGlobal(
+            'photos_directory',
+            $app['config.photos_directory']
+        );
+        $twig->addGlobal(
+            'download_photos_directory',
+            $app['config.download_photos_directory']
+        );
 
         return $twig;
     }
@@ -75,10 +82,14 @@ $app->register(
 $app->extend(
     'translator',
     function ($translator, $app) {
-        $translator->addResource('xliff', __DIR__.'/../translations/messages.en.xlf', 'en', 'messages');
-        $translator->addResource('xliff', __DIR__.'/../translations/validators.en.xlf', 'en', 'validators');
-        $translator->addResource('xliff', __DIR__.'/../translations/messages.pl.xlf', 'pl', 'messages');
-        $translator->addResource('xliff', __DIR__.'/../translations/validators.pl.xlf', 'pl', 'validators');
+        $translator
+            ->addResource('xliff', __DIR__.'/../translations/messages.en.xlf', 'en', 'messages');
+        $translator
+            ->addResource('xliff', __DIR__.'/../translations/validators.en.xlf', 'en', 'validators');
+        $translator
+            ->addResource('xliff', __DIR__.'/../translations/messages.pl.xlf', 'pl', 'messages');
+        $translator
+            ->addResource('xliff', __DIR__.'/../translations/validators.pl.xlf', 'pl', 'validators');
 
         return $translator;
     }

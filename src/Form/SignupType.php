@@ -1,16 +1,19 @@
 <?php
 /**
+ * PHP Version 5.6
  * Signup type.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Form;
-
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -22,15 +25,17 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Validator\Constraints as CustomAssert;
 
-
 /**
  * Class SignupType
  *
  * @category  Social_Network
- * @package   Form
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class SignupType extends AbstractType
@@ -111,8 +116,14 @@ class SignupType extends AbstractType
                     ),
                     new CustomAssert\UniqueEmail(
                         ['groups' => ['user-default'],
-                            'repository' => isset($options['user_repository']) ? $options['user_repository'] : null,
-                            'email' => isset($options['data']['email']) ? $options['data']['email'] : null,]
+                            'repository' =>
+                                isset($options['user_repository']) ?
+                                    $options['user_repository'] :
+                                    null,
+                            'email' =>
+                                isset($options['data']['email']) ?
+                                    $options['data']['email'] :
+                                    null, ]
                     ),
                 ],
             ]

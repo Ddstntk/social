@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Friends repository.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Repository;
@@ -19,10 +23,13 @@ use Utils\Paginator;
  * Class FriendsRepository
  *
  * @category  Social_Network
- * @package   Repository
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class FriendsRepository
@@ -84,10 +91,9 @@ class FriendsRepository
             ->innerJoin('y', 'friends', 'f', 'y.PK_idUsers = f.FK_idUserA')
             ->innerJoin('f', 'users', 'u', 'u.PK_idUsers = f.FK_idUserB')
             ->where('u.PK_idUsers = :userId')
-            ->setParameters(array(':userId'=> $userId));
+            ->setParameters(array(':userId' => $userId));
 
         return $x->execute()->fetchAll();
-
     }
 
     /**
@@ -117,7 +123,6 @@ class FriendsRepository
             $this->db->insert('invitations', $relation);
 
             $this->db->commit();
-
         } catch (DBALException $e) {
             $this->db->rollBack();
             throw $e;
@@ -175,7 +180,6 @@ class FriendsRepository
                 ->andWhere('FK_idUserA = '.$friendId)
                 ->execute();
             $this->db->commit();
-
         } catch (DBALException $e) {
             $this->db->rollBack();
             throw $e;
@@ -198,8 +202,16 @@ class FriendsRepository
         $this->db->beginTransaction();
 
         try {
-            $this->db->delete('friends', ['FK_idUserA' => $userId, 'FK_idUserB' => $friendId]);
-            $this->db->delete('friends', ['FK_idUserA' => $friendId, 'FK_idUserB' => $userId]);
+            $this->db
+                ->delete(
+                    'friends',
+                    ['FK_idUserA' => $userId, 'FK_idUserB' => $friendId]
+                );
+            $this->db
+                ->delete(
+                    'friends',
+                    ['FK_idUserA' => $friendId, 'FK_idUserB' => $userId]
+                );
             $this->db->commit();
         } catch (DBALException $e) {
             $this->db->rollBack();
@@ -267,7 +279,6 @@ class FriendsRepository
             ->innerJoin('y', 'friends', 'f', 'y.PK_idUsers = f.FK_idUserA')
             ->innerJoin('f', 'users', 'u', 'u.PK_idUsers = f.FK_idUserB')
             ->where('u.PK_idUsers = '.$userId);
-
     }
 
     /**
@@ -289,8 +300,33 @@ class FriendsRepository
             ->where('f.FK_idUserA = :userId')
             ->andWhere('f.FK_idUserB = :friendId')
             ->select('COUNT(DISTINCT u.PK_idUsers) AS total_results')
-            ->setParameters(array(':userId'=> $userId, ':friendId' => $friendId));
+            ->setParameters(array(':userId' => $userId, ':friendId' => $friendId));
+    }
 
+    /**
+     * Assert if users are invited
+     *
+     * @param User   $userId   Id
+     * @param Friend $friendId Id
+     *
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    public function areInvited($userId, $friendId)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder->select(
+            'f.FK_idUserB'
+        )
+            ->from('invitations', 'i')
+            ->where('i.FK_idUserA = :userId', 'i.FK_idUserB = :friendId')
+        //            ->andWhere('i.FK_idUserB = :friendId')
+            ->orWhere('i.FK_idUserA = :friendId AND i.FK_idUserB = :userId')
+        //            ->andWhere('i.FK_idUserB = :userId')
+            ->select('COUNT(DISTINCT i.FK_idUserB) AS total_results')
+            ->setParameters(array(':userId' => $userId, ':friendId' => $friendId));
+
+        return $queryBuilder->execute()->fetchAll();
     }
 
     /**
@@ -316,9 +352,7 @@ class FriendsRepository
             ->innerJoin('y', 'friends', 'f', 'y.PK_idUsers = f.FK_idUserA')
             ->innerJoin('f', 'users', 'u', 'u.PK_idUsers = f.FK_idUserB')
             ->where('u.PK_idUsers = :userId')
-            ->setParameters(array(':userId'=> $userId));
-
-
+            ->setParameters(array(':userId' => $userId));
     }
 
     /**
@@ -344,7 +378,7 @@ class FriendsRepository
             ->innerJoin('y', 'invitations', 'i', 'y.PK_idUsers = i.FK_idUserA')
             ->innerJoin('i', 'users', 'u', 'u.PK_idUsers = i.FK_idUserB')
             ->where('i.FK_idUserB = :userId')
-            ->setParameters(array(':userId'=> $userId));
+            ->setParameters(array(':userId' => $userId));
     }
     /**
      * Query all records.

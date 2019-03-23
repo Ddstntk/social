@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Comment type.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Form;
@@ -22,10 +26,13 @@ use Validator\Constraints as CustomAssert;
  * Class CommentType
  *
  * @category  Social_Network
- * @package   Form
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class CommentType extends AbstractType

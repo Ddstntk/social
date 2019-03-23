@@ -1,16 +1,19 @@
 <?php
 /**
+ * PHP Version 5.6
  * Admin controller.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Controller;
-
 
 use Form\LoginType;
 use Silex\Application;
@@ -19,14 +22,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Repository\UserRepository;
 use Form\SignupType;
 use Service\userTokenService;
+
 /**
  * Class AuthController.
  *
  * @category  Social_Network
- * @package   Controller
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class AuthController implements ControllerProviderInterface
@@ -58,14 +65,16 @@ class AuthController implements ControllerProviderInterface
      *
      * @param Application $app     Application
      * @param Request     $request Request
-     * 
+     *
      * @return mixed
      */
     public function loginAction(Application $app, Request $request)
     {
         $user = ['email' => $app['session']->get('_security.last_username')];
-        $form = $app['form.factory']->createBuilder(LoginType::class, $user)->getForm();
+        $form = $app['form.factory']
+            ->createBuilder(LoginType::class, $user)->getForm();
         $app['session']->set('userid', $user);
+
         return $app['twig']->render(
             'auth/login.html.twig',
             [
@@ -83,6 +92,7 @@ class AuthController implements ControllerProviderInterface
      * @param Request     $request Request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function signupAction(Application $app, Request $request)
@@ -100,8 +110,10 @@ class AuthController implements ControllerProviderInterface
 
             $user = $form->getData();
             $password = $user['password'];
-            $user['password'] = $app['security.encoder.bcrypt']->encodePassword($password, '');
+            $user['password'] = $app['security.encoder.bcrypt']
+                                ->encodePassword($password, '');
             $user['role_id'] = 2;
+            $user['photo'] = 'default.jpg';
             $userRepository->save($user);
 
             $app['session']->getFlashBag()->add(
@@ -112,7 +124,11 @@ class AuthController implements ControllerProviderInterface
                 ]
             );
 
-            return $app->redirect($app['url_generator']->generate('posts_index_paginated'), 301);
+            return $app->redirect(
+                $app['url_generator']
+                ->generate('posts_index_paginated'),
+                301
+            );
         }
 
 

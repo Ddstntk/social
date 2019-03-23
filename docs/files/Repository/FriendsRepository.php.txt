@@ -1,5 +1,6 @@
 <?php
 /**
+ * PHP Version 5.6
  * Friends repository.
  *
  * @category  Social_Network
@@ -198,8 +199,16 @@ class FriendsRepository
         $this->db->beginTransaction();
 
         try {
-            $this->db->delete('friends', ['FK_idUserA' => $userId, 'FK_idUserB' => $friendId]);
-            $this->db->delete('friends', ['FK_idUserA' => $friendId, 'FK_idUserB' => $userId]);
+            $this->db
+                ->delete(
+                    'friends',
+                    ['FK_idUserA' => $userId, 'FK_idUserB' => $friendId]
+                );
+            $this->db
+                ->delete(
+                    'friends',
+                    ['FK_idUserA' => $friendId, 'FK_idUserB' => $userId]
+                );
             $this->db->commit();
         } catch (DBALException $e) {
             $this->db->rollBack();
@@ -290,6 +299,33 @@ class FriendsRepository
             ->andWhere('f.FK_idUserB = :friendId')
             ->select('COUNT(DISTINCT u.PK_idUsers) AS total_results')
             ->setParameters(array(':userId'=> $userId, ':friendId' => $friendId));
+
+    }
+
+    /**
+     * Assert if users are invited
+     *
+     * @param User   $userId   Id
+     * @param Friend $friendId Id
+     *
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    public function areInvited($userId, $friendId)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        $queryBuilder->select(
+            'f.FK_idUserB'
+        )
+            ->from('invitations', 'i')
+            ->where('i.FK_idUserA = :userId', 'i.FK_idUserB = :friendId')
+        //            ->andWhere('i.FK_idUserB = :friendId')
+            ->orWhere('i.FK_idUserA = :friendId AND i.FK_idUserB = :userId')
+        //            ->andWhere('i.FK_idUserB = :userId')
+            ->select('COUNT(DISTINCT i.FK_idUserB) AS total_results')
+            ->setParameters(array(':userId'=> $userId, ':friendId' => $friendId));
+
+        return $queryBuilder->execute()->fetchAll();
 
     }
 

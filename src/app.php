@@ -1,13 +1,17 @@
 <?php
 
 /**
+ * PHP Version 5.6
  * App.php
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 
@@ -28,7 +32,6 @@ use Silex\Provider\SecurityServiceProvider;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Service\userTokenService;
 use Repository\UserRepository;
-
 
 $app = new Application();
 $app->register(new ServiceControllerServiceProvider());
@@ -51,10 +54,17 @@ $app['config.download_photos_directory'] = '/uploads/photos';
 
 
 $app['twig'] = $app->extend(
-    'twig', function ($twig, $app) {
+    'twig',
+    function ($twig, $app) {
         // add custom globals, filters, tags, ...
-        $twig->addGlobal('photos_directory', $app['config.photos_directory']);
-        $twig->addGlobal('download_photos_directory', $app['config.download_photos_directory']);
+        $twig->addGlobal(
+            'photos_directory',
+            $app['config.photos_directory']
+        );
+        $twig->addGlobal(
+            'download_photos_directory',
+            $app['config.download_photos_directory']
+        );
 
         return $twig;
     }
@@ -75,10 +85,14 @@ $app->register(
 $app->extend(
     'translator',
     function ($translator, $app) {
-        $translator->addResource('xliff', __DIR__.'/../translations/messages.en.xlf', 'en', 'messages');
-        $translator->addResource('xliff', __DIR__.'/../translations/validators.en.xlf', 'en', 'validators');
-        $translator->addResource('xliff', __DIR__.'/../translations/messages.pl.xlf', 'pl', 'messages');
-        $translator->addResource('xliff', __DIR__.'/../translations/validators.pl.xlf', 'pl', 'validators');
+        $translator
+            ->addResource('xliff', __DIR__.'/../translations/messages.en.xlf', 'en', 'messages');
+        $translator
+            ->addResource('xliff', __DIR__.'/../translations/validators.en.xlf', 'en', 'validators');
+        $translator
+            ->addResource('xliff', __DIR__.'/../translations/messages.pl.xlf', 'pl', 'messages');
+        $translator
+            ->addResource('xliff', __DIR__.'/../translations/validators.pl.xlf', 'pl', 'validators');
 
         return $translator;
     }
@@ -147,4 +161,3 @@ $app->register(
 );
 
 return $app;
-

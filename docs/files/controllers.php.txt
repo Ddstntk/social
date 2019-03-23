@@ -1,5 +1,6 @@
 <?php
 /**
+ * PHP Version 5.6
  * Routing and controllers.
  *
  * @category  Social_Network
@@ -25,7 +26,13 @@ $app->get(
 
         return $app['twig']->render(
             'user/view.html.twig',
-            ['user' => $userRepository->getUserById($app['security.token_storage']->getToken()->getUser()->getID())]
+            ['user' => $userRepository
+                ->getUserById(
+                    $app['security.token_storage']
+                    ->getToken()
+                    ->getUser()
+                    ->getID()
+                )]
         );
     }
 )

@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Post type.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 namespace Form;
@@ -22,10 +26,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class PostType
  *
  * @category  Social_Network
- * @package   Form
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class PostType extends AbstractType
@@ -68,12 +75,13 @@ class PostType extends AbstractType
         )
             ->add(
                 'visibility',
-                ChoiceType::class, array(
+                ChoiceType::class,
+                array(
                 'label' => 'label.visibility',
                 'choices'  => array(
                 'label.friends' => 0,
-                'label.everyone'=> 1,
-                )
+                'label.everyone' => 1,
+                ),
                 )
             );
     }

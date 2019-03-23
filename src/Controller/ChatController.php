@@ -1,12 +1,16 @@
 <?php
 /**
+ * PHP Version 5.6
  * Chat controller.
  *
  * @category  Social_Network
- * @package   Social
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 
@@ -29,10 +33,13 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * Class ChatController.
  *
  * @category  Social_Network
- * @package   Controller
+ *
  * @author    Konrad Szewczuk <konrad3szewczuk@gmail.com>
+ *
  * @copyright 2018 Konrad Szewczuk
+ *
  * @license   https://opensource.org/licenses/MIT MIT license
+ *
  * @link      cis.wzks.uj.edu.pl/~16_szewczuk
  */
 class ChatController implements ControllerProviderInterface
@@ -47,8 +54,10 @@ class ChatController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        $controller->get('/view', [$this, 'indexAction'])->bind('chat_index_paginated');
-        $controller->get('/all', [$this, 'indexChats'])->bind('chat_index');
+        $controller->get('/view', [$this, 'indexAction'])
+            ->bind('chat_index_paginated');
+        $controller->get('/all', [$this, 'indexChats'])
+            ->bind('chat_index');
         $controller->match('/send', [$this, 'sendAction'])
             ->method('POST|GET')
             ->bind('messages_send');
@@ -58,6 +67,7 @@ class ChatController implements ControllerProviderInterface
         $controller->match('/set/{id}', [$this, 'setChat'])
             ->method('POST|GET')
             ->bind('set_chat');
+
         return $controller;
     }
 
@@ -81,7 +91,6 @@ class ChatController implements ControllerProviderInterface
         $friendsRepository = new friendsRepository($app['db']);
 
         $friends = $friendsRepository -> friendsNames($userId);
-        //        var_dump($friends);
 
         foreach ($friends as $k) {
             $fullname = $k['name'].' '.$k['surname'];
@@ -92,7 +101,7 @@ class ChatController implements ControllerProviderInterface
             ChatType::class,
             $conversation,
             array(
-                'data' => $friendList
+                'data' => $friendList,
                 )
         )->getForm();
         $form->handleRequest($request);
@@ -110,9 +119,14 @@ class ChatController implements ControllerProviderInterface
                     'message' => 'message.chat_created',
                 ]
             );
-            return $app->redirect($app['url_generator']->generate('chat_index'), 301);
 
+            return $app->redirect(
+                $app['url_generator']
+                ->generate('chat_index'),
+                301
+            );
         }
+
         return $app['twig']->render(
             'chat/new.html.twig',
             [
@@ -133,17 +147,29 @@ class ChatController implements ControllerProviderInterface
      */
     public function indexAction(Application $app, SessionInterface $session, $page = 1)
     {
-        //        $session->set('chat', '81');
+        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+
+        $chatRepository = new ChatRepository($app['db']);
         $id = $session->get('chat');
         if (!$id) {
-            $id = 25;
+            $idArr = $chatRepository
+                ->findLastChat($userId);
+            if (!$idArr) {
+                return $app['twig']->render(
+                    'chat/index.html.twig',
+                    ['paginator' => $chatRepository
+                        ->findAllPaginated(1234, 1234, $page),
+                    'user' => $userId, ]
+                );
+            }
+            $id = $idArr[0]["FK_idConversations"];
         }
-        $chatRepository = new ChatRepository($app['db']);
-        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+
         return $app['twig']->render(
             'chat/index.html.twig',
-            ['paginator' => $chatRepository->findAllPaginated($userId, $id, $page),
-                'user' => $userId]
+            ['paginator' => $chatRepository
+                ->findAllPaginated($userId, $id, $page),
+                'user' => $userId, ]
         );
     }
 
@@ -161,9 +187,8 @@ class ChatController implements ControllerProviderInterface
         $session->set('chat', $id);
         $chatRepository = new ChatRepository($app['db']);
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+
         return $app->redirect($app['url_generator']->generate('chat_index'), 301);
-
-
     }
     /**
      * Index chats action
@@ -176,10 +201,11 @@ class ChatController implements ControllerProviderInterface
     {
         $chatRepository = new ChatRepository($app['db']);
         $userId = $app['security.token_storage']->getToken()->getUser()->getID();
+
         return $app['twig']->render(
             'chat/all.html.twig',
             ['chats' => $chatRepository->findAllChats($userId),
-                'user' => $userId]
+                'user' => $userId, ]
         );
     }
 
@@ -198,21 +224,24 @@ class ChatController implements ControllerProviderInterface
     public function sendAction(Application $app, Request $request, SessionInterface $session)
     {
         $post = [];
-        $id = $session->get('chat');
+        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
 
+        $chatRepository = new ChatRepository($app['db']);
+        $id = $session->get('chat');
         if (!$id) {
-            $id = 25;
+            $idArr = $chatRepository->findLastChat($userId);
+            if ($idArr) {
+                $id = $idArr[0]["FK_idConversations"];
+            }
         }
         $form = $app['form.factory']->createBuilder(
             MessageType::class,
             $post
         )->getForm();
         $form->handleRequest($request);
-        $userId = $app['security.token_storage']->getToken()->getUser()->getID();
         if ($form->isSubmitted() && $form->isValid()) {
             $postsRepository = new ChatRepository($app['db']);
             $postsRepository->save($form->getData(), $userId, $id);
-
         }
 
 
@@ -225,6 +254,4 @@ class ChatController implements ControllerProviderInterface
             ]
         );
     }
-
-
 }
